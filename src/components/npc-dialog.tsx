@@ -12,11 +12,13 @@ export function NpcDialog({
   npcTargetStation,
   npcTaskPhase,
   onWalkToStation,
+  className,
 }: {
   dialog: NpcDialogMessage | null;
   npcTargetStation: ModuleId;
   npcTaskPhase: 'walking' | 'working' | 'resting';
   onWalkToStation: (id: ModuleId) => void;
+  className?: string;
 }) {
   if (!dialog) return null;
   const npcProfile = getAstronaut(dialog.speakerId);
@@ -36,8 +38,9 @@ export function NpcDialog({
   return (
     <div
       className={cn(
-        'pointer-events-auto flex max-w-md items-center gap-3 rounded-2xl border-2 bg-[#fffefa] px-3.5 py-2.5 text-[#344270] shadow-[0_14px_34px_-10px_rgba(16,20,56,0.5)]',
+        'pointer-events-auto flex min-w-0 items-center gap-2.5 rounded-2xl border-2 bg-[#fffefa] px-3 py-2 text-[#344270] shadow-[0_10px_24px_-10px_rgba(16,20,56,0.45)] sm:gap-3 sm:px-3.5',
         borderTone,
+        className,
       )}
       role="status"
       aria-live="polite"

@@ -499,15 +499,15 @@ export default function Base() {
 
   return (
     <div
-      className="relative flex h-[100dvh] w-full flex-col overflow-hidden text-[#344270]"
+      className="relative flex h-[100dvh] w-full flex-col overflow-x-hidden overflow-y-auto [@media(min-height:600px)]:overflow-hidden text-[#344270]"
       style={{
         background:
           'radial-gradient(circle at 10% 5%, #565c94, transparent 35%), linear-gradient(150deg, #252d66, #151b42)',
       }}
     >
       {/* Slim Storybook Cream & Indigo HUD */}
-      <header className="z-20 shrink-0 px-2 pt-1.5 sm:px-3.5 sm:pt-2">
-        <div className="mx-auto max-w-[1440px] rounded-2xl border-2 border-white bg-[#fffefa] px-2.5 py-1.5 shadow-[0_10px_28px_-10px_rgba(12,16,48,0.5)] sm:px-3.5">
+      <header className="z-20 shrink-0 px-2 pt-1 sm:px-3.5 sm:pt-1.5">
+        <div className="mx-auto max-w-[1440px] rounded-2xl border-2 border-white bg-[#fffefa] px-2 py-1 shadow-[0_10px_28px_-10px_rgba(12,16,48,0.5)] sm:px-3.5 sm:py-1.5">
           <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
             {/* Left: Home + Player Astronaut + Crew Healthbar + Survival Clock */}
             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -587,7 +587,7 @@ export default function Base() {
 
               <div
                 className={cn(
-                  'hidden items-center gap-1.5 rounded-xl border-2 px-2.5 py-1 font-mono text-xs font-extrabold xl:flex tabular-nums',
+                  'hidden items-center gap-1.5 rounded-xl border-2 px-2 py-0.5 font-mono text-xs font-extrabold 2xl:flex tabular-nums',
                   hud.onlineCount <= 2
                     ? 'border-[#ff7b8a] bg-[#fff0f2] text-[#c43a51]'
                     : hud.onlineCount <= 4
@@ -600,9 +600,9 @@ export default function Base() {
               </div>
             </div>
 
-            {/* Center: Slim Quick-Walk Station Pills (no duplicate % — % is already on canvas stations) */}
+            {/* Center: Slim Quick-Walk Station Pills (1 row on desktop & mobile, zero duplicate %) */}
             <div
-              className="order-3 grid w-full grid-cols-3 gap-1 sm:grid-cols-6 lg:order-2 lg:flex lg:w-auto lg:items-center lg:gap-1"
+              className="order-3 grid w-full grid-cols-6 gap-1 lg:order-2 lg:flex lg:w-auto lg:items-center lg:gap-1"
               data-testid="hud-station-bars"
             >
               {STATION_ORDER.map((id) => {
@@ -622,6 +622,14 @@ export default function Base() {
                     : pct < 65
                       ? 'border-[#ffcf79] bg-[#fff8e8] text-[#9b6110]'
                       : 'border-[#dce3f8] bg-[#f4f6ff] text-[#222a5b]';
+                const mobileShort: Record<ModuleId, string> = {
+                  solar: 'Sun',
+                  greenhouse: 'Food',
+                  habitat: 'Home',
+                  recycler: 'Water',
+                  shelter: 'Shield',
+                  comms: 'Radio',
+                };
                 return (
                   <button
                     key={id}
@@ -633,7 +641,7 @@ export default function Base() {
                     }}
                     data-testid={`hud-station-${id}`}
                     className={cn(
-                      'flex min-h-[30px] items-center justify-center gap-1.5 rounded-xl border px-2 py-0.5 transition hover:brightness-95 disabled:opacity-55',
+                      'flex min-h-[26px] items-center justify-center gap-1 rounded-xl border px-1 py-0.5 transition hover:brightness-95 disabled:opacity-55 sm:min-h-[28px] sm:px-2',
                       toneColor,
                     )}
                     title={`Walk to ${STATIONS[id].label} (${st.failed ? 'OFFLINE' : `${pct}%`})`}
@@ -643,11 +651,14 @@ export default function Base() {
                       style={{ backgroundColor: dotColor }}
                       aria-hidden
                     />
-                    <span className="truncate font-display text-[10.5px] font-extrabold">
+                    <span className="truncate font-display text-[10px] font-extrabold sm:hidden">
+                      {mobileShort[id]}
+                    </span>
+                    <span className="hidden truncate font-display text-[10.5px] font-extrabold sm:inline">
                       {STATIONS[id].label}
                     </span>
                     {st.failed && (
-                      <span className="font-mono text-[9.5px] font-extrabold">OFF</span>
+                      <span className="hidden font-mono text-[9.5px] font-extrabold sm:inline">OFF</span>
                     )}
                   </button>
                 );
@@ -655,7 +666,7 @@ export default function Base() {
             </div>
 
             {/* Right: NASA Data, Music, Sound & Pause Buttons */}
-            <div className="order-2 flex items-center gap-1.5 lg:order-3">
+            <div className="order-2 flex items-center gap-1 lg:order-3">
               <button
                 type="button"
                 onClick={(e) => {
@@ -666,7 +677,7 @@ export default function Base() {
                 }}
                 tabIndex={-1}
                 className={cn(
-                  'inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border-2 px-2.5 font-mono text-xs font-extrabold transition',
+                  'inline-flex h-9 items-center justify-center gap-1 rounded-xl border-2 px-2 font-mono text-[11px] font-extrabold transition',
                   weatherSummary.isLive
                     ? 'border-[#76dbae] bg-[#e5f9ef] text-[#1e7a54]'
                     : weatherSummary.isArchived
@@ -698,7 +709,7 @@ export default function Base() {
                 }}
                 tabIndex={-1}
                 className={cn(
-                  'inline-flex h-10 items-center justify-center gap-1 rounded-xl border-2 px-2.5 font-display text-xs font-extrabold transition',
+                  'inline-flex h-9 items-center justify-center gap-1 rounded-xl border-2 px-2 font-display text-xs font-extrabold transition',
                   musicOn
                     ? 'border-[#b4a0ef] bg-[#f1ecff] text-[#4e3896]'
                     : 'border-[#e3e8f8] bg-[#f4f6ff] text-[#6a79a0]',
@@ -708,7 +719,7 @@ export default function Base() {
                 title="Toggle cheerful space melody"
               >
                 <Music className="h-4 w-4" />
-                <span className="hidden xl:inline">{musicOn ? 'Music On' : 'Music'}</span>
+                <span className="hidden 2xl:inline">{musicOn ? 'Music On' : 'Music'}</span>
               </button>
 
               <button
@@ -720,11 +731,11 @@ export default function Base() {
                   if (next) playSfx('tap');
                 }}
                 tabIndex={-1}
-                className="grid h-10 w-10 place-items-center rounded-xl border-2 border-[#e3e8f8] bg-[#f4f6ff] text-[#4e619e] hover:border-[#b4a0ef]"
+                className="grid h-9 w-9 place-items-center rounded-xl border-2 border-[#e3e8f8] bg-[#f4f6ff] text-[#4e619e] hover:border-[#b4a0ef]"
                 aria-label={soundOn ? 'Mute sound effects' : 'Enable sound effects'}
                 data-testid="button-toggle-sound"
               >
-                {soundOn ? <Volume2 className="h-4.5 w-4.5" /> : <VolumeX className="h-4.5 w-4.5" />}
+                {soundOn ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
               </button>
 
               <button
@@ -735,7 +746,7 @@ export default function Base() {
                   togglePause();
                 }}
                 tabIndex={-1}
-                className="inline-flex h-10 w-10 items-center justify-center gap-1.5 rounded-xl border-2 border-[#e3e8f8] bg-[#f4f6ff] px-0 font-display text-sm font-extrabold text-[#344270] hover:border-[#b4a0ef] sm:w-auto sm:px-3"
+                className="inline-flex h-9 w-9 items-center justify-center gap-1 rounded-xl border-2 border-[#e3e8f8] bg-[#f4f6ff] px-0 font-display text-xs font-extrabold text-[#344270] hover:border-[#b4a0ef] sm:w-auto sm:px-2.5"
                 aria-label="Pause game"
                 data-testid="button-pause"
               >
@@ -799,9 +810,15 @@ export default function Base() {
         </div>
       </header>
 
-      {/* Main Playable Moon Base Arena inside Crisp White Storybook Frame */}
-      <main className="relative flex-1 p-1.5 sm:p-3">
-        <div className="relative mx-auto h-full w-full max-w-[1440px] overflow-hidden rounded-[22px] border-4 border-white shadow-[0_18px_46px_-12px_rgba(10,14,42,0.65)]">
+      {/* Main Playable Moon Base Arena dynamically scaled to fit 100% of the scene */}
+      <main className="relative flex flex-1 min-h-[200px] items-center justify-center px-2 py-1 sm:px-3.5 sm:py-1.5 [container-type:size]">
+        <div
+          className="relative overflow-hidden rounded-[18px] border-[3px] border-white bg-[#594e86] shadow-[0_18px_46px_-12px_rgba(10,14,42,0.65)] sm:rounded-[22px] sm:border-4"
+          style={{
+            width: 'min(100cqw, calc(100cqh * 1000 / 540), 1440px)',
+            height: 'min(100cqh, calc(100cqw * 540 / 1000), calc(1440px * 540 / 1000))',
+          }}
+        >
           <SurvivalCanvas
             worldRef={worldRef}
             paused={Boolean(openStationModal) || nasaModalOpen || hud.phase !== 'playing'}
@@ -810,8 +827,8 @@ export default function Base() {
             onOpenNearbyStation={handleOpenNearby}
           />
 
-          {/* Upper-Left Storm / Active Buffs & Consequence Feedback */}
-          <div className="pointer-events-none absolute left-3 top-3 z-20 flex max-w-[195px] flex-col gap-2 sm:left-4 sm:top-4 sm:max-w-xs">
+          {/* Upper-Left Storm / Active Buffs & Consequence Feedback (open sky corner) */}
+          <div className="pointer-events-none absolute left-2.5 top-2.5 z-20 flex max-w-[195px] flex-col gap-1.5 sm:left-3.5 sm:top-3.5 sm:max-w-xs">
             {hud.stormActive && (
               <button
                 type="button"
@@ -819,11 +836,11 @@ export default function Base() {
                   playSfx('tap');
                   setNasaModalOpen(true);
                 }}
-                className="pointer-events-auto flex flex-col gap-1 rounded-2xl border-2 border-[#ff7b8a] bg-[#fffefa] px-3 py-2 text-left text-[#c43a51] shadow-xl transition hover:scale-[1.01]"
+                className="pointer-events-auto flex flex-col gap-0.5 rounded-2xl border-2 border-[#ff7b8a] bg-[#fffefa] px-2.5 py-1.5 text-left text-[#c43a51] shadow-xl transition hover:scale-[1.01] sm:px-3 sm:py-2"
                 data-testid="hud-storm-alert"
               >
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 shrink-0 text-[#c43a51]" />
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <AlertTriangle className="h-4 w-4 shrink-0 text-[#c43a51] sm:h-5 sm:w-5" />
                   <span className="font-display text-xs font-extrabold sm:text-sm">
                     {hud.stormLabel}!
                   </span>
@@ -836,100 +853,100 @@ export default function Base() {
               </button>
             )}
             {hud.shieldBoostSec > 0 && (
-              <div className="flex items-center gap-1.5 rounded-xl border-2 border-white bg-[#e5f9ef] px-3 py-1.5 font-mono text-xs font-extrabold text-[#1e7a54] shadow-md">
-                <Shield className="h-4 w-4" /> Storm Armor {Math.ceil(hud.shieldBoostSec)}s
+              <div className="flex items-center gap-1.5 rounded-xl border-2 border-white bg-[#e5f9ef] px-2.5 py-1 font-mono text-[11px] font-extrabold text-[#1e7a54] shadow-md sm:text-xs">
+                <Shield className="h-3.5 w-3.5" /> Storm Armor {Math.ceil(hud.shieldBoostSec)}s
               </div>
             )}
             {toastMsg && (
               <div
-                className="rounded-2xl border-2 border-white bg-[#fffefa] px-3 py-2 font-display text-xs font-extrabold text-[#222a5b] shadow-xl sm:text-sm"
+                className="rounded-2xl border-2 border-white bg-[#fffefa] px-2.5 py-1.5 font-display text-xs font-extrabold text-[#222a5b] shadow-xl sm:px-3 sm:py-2 sm:text-sm"
                 data-testid="hud-consequence-toast"
               >
                 {toastMsg}
               </div>
             )}
           </div>
+        </div>
+      </main>
 
-          {/* Upper-Right Crew Cam Monitor */}
-          <div className="pointer-events-none absolute right-3 top-3 z-20 sm:right-4 sm:top-4">
+      {/* Dedicated Docked Bottom Control Bar (never hides any station or astronaut on the map) */}
+      <section className="z-20 shrink-0 px-2 pb-1.5 sm:px-3.5 sm:pb-2" aria-label="Crew status and controls">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-1.5 md:flex-row md:items-center md:justify-between md:gap-2.5">
+          <NpcDialog
+            dialog={hud.dialog}
+            npcTargetStation={hud.npcTargetStation}
+            npcTaskPhase={hud.npcTaskPhase}
+            onWalkToStation={handleWalkToStation}
+            className="w-full md:max-w-xl md:flex-1"
+          />
+
+          <div className="flex flex-wrap items-center justify-between gap-2 md:ml-auto md:flex-nowrap md:justify-end">
+            <div className="grid grid-cols-3 gap-1 md:hidden" aria-label="Walk controls">
+              <div />
+              <button
+                type="button"
+                {...bindDpad(0, -1)}
+                className="grid h-10 w-10 place-items-center rounded-xl border-2 border-white bg-[#fffefa]/95 text-[#344270] shadow active:bg-[#ffe7a1]"
+                aria-label="Walk up"
+              >
+                <ArrowUp className="h-4.5 w-4.5" />
+              </button>
+              <div />
+              <button
+                type="button"
+                {...bindDpad(-1, 0)}
+                className="grid h-10 w-10 place-items-center rounded-xl border-2 border-white bg-[#fffefa]/95 text-[#344270] shadow active:bg-[#ffe7a1]"
+                aria-label="Walk left"
+              >
+                <ArrowLeft className="h-4.5 w-4.5" />
+              </button>
+              <button
+                type="button"
+                {...bindDpad(0, 1)}
+                className="grid h-10 w-10 place-items-center rounded-xl border-2 border-white bg-[#fffefa]/95 text-[#344270] shadow active:bg-[#ffe7a1]"
+                aria-label="Walk down"
+              >
+                <ArrowDown className="h-4.5 w-4.5" />
+              </button>
+              <button
+                type="button"
+                {...bindDpad(1, 0)}
+                className="grid h-10 w-10 place-items-center rounded-xl border-2 border-white bg-[#fffefa]/95 text-[#344270] shadow active:bg-[#ffe7a1]"
+                aria-label="Walk right"
+              >
+                <ArrowRight className="h-4.5 w-4.5" />
+              </button>
+            </div>
+
             <CrewCamPip
               worldRef={worldRef}
               indoorCrew={hud.indoorCrew}
               paused={Boolean(openStationModal) || nasaModalOpen || hud.phase !== 'playing'}
             />
-          </div>
 
-          {/* Bottom HUD Overlay: NPC Dialog + Interact CTA + Mobile D-Pad */}
-          <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex flex-col gap-2.5 sm:inset-x-4 sm:bottom-4 sm:flex-row sm:items-end sm:justify-between">
-            <NpcDialog
-              dialog={hud.dialog}
-              npcTargetStation={hud.npcTargetStation}
-              npcTaskPhase={hud.npcTaskPhase}
-              onWalkToStation={handleWalkToStation}
-            />
-
-            <div className="flex items-end justify-between gap-3 sm:justify-end">
-              <div className="pointer-events-auto grid grid-cols-3 gap-1 md:hidden" aria-label="Walk controls">
-                <div />
-                <button
-                  type="button"
-                  {...bindDpad(0, -1)}
-                  className="grid h-11 w-11 place-items-center rounded-xl border-2 border-white bg-[#fffefa]/95 text-[#344270] shadow active:bg-[#ffe7a1]"
-                  aria-label="Walk up"
-                >
-                  <ArrowUp className="h-5 w-5" />
-                </button>
-                <div />
-                <button
-                  type="button"
-                  {...bindDpad(-1, 0)}
-                  className="grid h-11 w-11 place-items-center rounded-xl border-2 border-white bg-[#fffefa]/95 text-[#344270] shadow active:bg-[#ffe7a1]"
-                  aria-label="Walk left"
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                </button>
-                <button
-                  type="button"
-                  {...bindDpad(0, 1)}
-                  className="grid h-11 w-11 place-items-center rounded-xl border-2 border-white bg-[#fffefa]/95 text-[#344270] shadow active:bg-[#ffe7a1]"
-                  aria-label="Walk down"
-                >
-                  <ArrowDown className="h-5 w-5" />
-                </button>
-                <button
-                  type="button"
-                  {...bindDpad(1, 0)}
-                  className="grid h-11 w-11 place-items-center rounded-xl border-2 border-white bg-[#fffefa]/95 text-[#344270] shadow active:bg-[#ffe7a1]"
-                  aria-label="Walk right"
-                >
-                  <ArrowRight className="h-5 w-5" />
-                </button>
-              </div>
-
-              {hud.nearbyStationId && !hud.stations[hud.nearbyStationId].failed && (
-                <button
-                  type="button"
-                  onClick={handleOpenNearby}
-                  data-testid="button-open-nearby-station"
-                  className={cn(
-                    'pointer-events-auto inline-flex min-h-[54px] items-center gap-2.5 rounded-2xl px-6 py-3 font-display text-lg font-extrabold shadow-2xl transition active:translate-y-0.5',
-                    hud.nearbyCanOpen
-                      ? 'bg-gradient-to-b from-[#ffe7a1] to-[#ffca6b] text-[#364272] shadow-[0_5px_0_#e7a959] hover:brightness-105'
-                      : 'border-2 border-white bg-[#eef2ff] text-[#607094]',
-                  )}
-                >
-                  <Wrench className="h-5 w-5" />
-                  <span>
-                    {hud.nearbyCanOpen
-                      ? `OPEN ${STATIONS[hud.nearbyStationId].label.toUpperCase()} [E]`
-                      : `${STATIONS[hud.nearbyStationId].label} Ready Soon...`}
-                  </span>
-                </button>
-              )}
-            </div>
+            {hud.nearbyStationId && !hud.stations[hud.nearbyStationId].failed && (
+              <button
+                type="button"
+                onClick={handleOpenNearby}
+                data-testid="button-open-nearby-station"
+                className={cn(
+                  'inline-flex min-h-[48px] items-center gap-2 rounded-2xl px-4 py-2 font-display text-sm font-extrabold shadow-xl transition active:translate-y-0.5 sm:min-h-[54px] sm:px-5 sm:text-base',
+                  hud.nearbyCanOpen
+                    ? 'bg-gradient-to-b from-[#ffe7a1] to-[#ffca6b] text-[#364272] shadow-[0_4px_0_#e7a959] hover:brightness-105'
+                    : 'border-2 border-white bg-[#eef2ff] text-[#607094]',
+                )}
+              >
+                <Wrench className="h-4.5 w-4.5 shrink-0" />
+                <span>
+                  {hud.nearbyCanOpen
+                    ? `OPEN ${STATIONS[hud.nearbyStationId].label.toUpperCase()} [E]`
+                    : `${STATIONS[hud.nearbyStationId].label} Ready Soon...`}
+                </span>
+              </button>
+            )}
           </div>
         </div>
-      </main>
+      </section>
 
       {/* Station Choice + Mini-Game Modal */}
       {openStationModal && hud.phase === 'playing' && (

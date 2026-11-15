@@ -89,7 +89,7 @@ export default function Welcome() {
         ))}
       </div>
 
-      <div className="relative mx-auto flex min-h-full max-w-6xl flex-col justify-between px-4 py-4 sm:px-8 sm:py-5">
+      <div className="relative mx-auto flex min-h-full max-w-6xl flex-col justify-between px-4 py-3 sm:px-8 sm:py-4">
         {/* Top Bar */}
         <header className="flex items-center justify-between gap-4">
           <div className="inline-flex items-center gap-2.5 rounded-full bg-white/14 px-3.5 py-1.5 shadow-sm ring-1 ring-white/20">
@@ -135,8 +135,8 @@ export default function Welcome() {
         </header>
 
         {/* Main Hero: 4-Astronaut Picker + How-to-Play Story Guide & Highscore */}
-        <main className="my-auto grid items-start gap-5 py-3 lg:grid-cols-[1.22fr_0.78fr]">
-          <div className="rounded-[28px] border-4 border-white bg-[#fffefa] p-5 text-[#344270] shadow-[0_22px_50px_-14px_rgba(10,14,42,0.58)] sm:p-6">
+        <main className="my-auto grid items-start gap-4 py-2.5 lg:grid-cols-[1.22fr_0.78fr]">
+          <div className="rounded-[28px] border-4 border-white bg-[#fffefa] p-4 text-[#344270] shadow-[0_22px_50px_-14px_rgba(10,14,42,0.58)] sm:p-5">
             <div className="inline-flex items-center gap-1.5 rounded-full bg-[#fff3d6] px-3 py-1 text-xs font-extrabold text-[#7d5a12]">
               <Sparkles className="h-3.5 w-3.5 text-[#e7a959]" />
               <span>Real NASA Space Science · Ages 7–12</span>
@@ -174,13 +174,13 @@ export default function Welcome() {
                     onClick={() => selectAstronaut(astro.id)}
                     data-testid={`select-astronaut-${astro.id}`}
                     className={cn(
-                      'flex min-h-[82px] items-center gap-3.5 rounded-2xl border-2 px-4 py-3 text-left transition active:translate-y-0.5',
+                      'flex min-h-[72px] items-center gap-3 rounded-2xl border-2 px-3.5 py-2.5 text-left transition active:translate-y-0.5',
                       isSelected
                         ? 'border-[#ffbf66] bg-[#fff5e0] shadow-[0_5px_0_#f0cf95]'
                         : 'border-[#dfe5f6] bg-[#f6f8ff] hover:border-[#b4a0ef] hover:bg-[#eef2ff]',
                     )}
                   >
-                    <AstronautAvatar profile={astro} size={52} className="shrink-0" />
+                    <AstronautAvatar profile={astro} size={48} className="shrink-0" />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-2">
                         <span className="truncate font-display text-base font-extrabold text-[#222a5b]">
@@ -208,13 +208,13 @@ export default function Welcome() {
             </div>
 
             {/* Selected Crew Pairing + Play Button */}
-            <div className="mt-5 flex flex-wrap items-center gap-3.5">
+            <div className="mt-4 flex flex-wrap items-center gap-3">
               <button
                 type="button"
                 onClick={launchGame}
                 data-testid="button-start"
                 data-start="true"
-                className="inline-flex min-h-[60px] items-center justify-center gap-3 rounded-2xl bg-gradient-to-b from-[#ffe7a1] to-[#ffca6b] px-8 py-3.5 font-display text-xl font-extrabold text-[#364272] shadow-[0_5px_0_#e7a959] transition hover:brightness-105 active:translate-y-0.5 active:shadow-[0_2px_0_#e7a959] sm:text-2xl"
+                className="inline-flex min-h-[56px] items-center justify-center gap-3 rounded-2xl bg-gradient-to-b from-[#ffe7a1] to-[#ffca6b] px-7 py-3 font-display text-xl font-extrabold text-[#364272] shadow-[0_5px_0_#e7a959] transition hover:brightness-105 active:translate-y-0.5 active:shadow-[0_2px_0_#e7a959] sm:text-2xl"
               >
                 <Rocket className="h-6 w-6" />
                 PLAY AS {chosen.shortName.toUpperCase()}!
@@ -235,7 +235,7 @@ export default function Welcome() {
           </div>
 
           {/* Right Column: How-to-Play Story Guide + Highscore Leaderboard */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div
               className="rounded-[26px] border-4 border-white bg-[#fffefa] p-4 text-[#344270] shadow-[0_18px_42px_-14px_rgba(10,14,42,0.55)]"
               data-testid="home-how-to-play-card"

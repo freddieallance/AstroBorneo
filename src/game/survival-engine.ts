@@ -459,6 +459,28 @@ export function distanceBetween(a: Vec2, b: Vec2): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
+export function clientPointToWorldPoint(
+  clientX: number,
+  clientY: number,
+  rect: { left: number; top: number; width: number; height: number },
+  worldWidth = WORLD_WIDTH,
+  worldHeight = WORLD_HEIGHT,
+): Vec2 | null {
+  if (rect.width <= 0 || rect.height <= 0 || worldWidth <= 0 || worldHeight <= 0) return null;
+  const scale = Math.min(rect.width / worldWidth, rect.height / worldHeight);
+  const renderedWidth = worldWidth * scale;
+  const renderedHeight = worldHeight * scale;
+  const offsetX = (rect.width - renderedWidth) / 2;
+  const offsetY = (rect.height - renderedHeight) / 2;
+
+  const rawX = ((clientX - rect.left - offsetX) / renderedWidth) * worldWidth;
+  const rawY = ((clientY - rect.top - offsetY) / renderedHeight) * worldHeight;
+  return {
+    x: Math.max(0, Math.min(worldWidth, rawX)),
+    y: Math.max(0, Math.min(worldHeight, rawY)),
+  };
+}
+
 export const RESOURCE_KEYS: readonly ResourceKey[] = ['power', 'air', 'water', 'food', 'safety'];
 
 export const RESOURCE_LABELS: Record<ResourceKey, string> = {

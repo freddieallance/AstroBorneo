@@ -1,6 +1,7 @@
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from 'react';
 import type { ModuleId } from '@/content/mission';
 import {
+  clientPointToWorldPoint,
   distanceBetween,
   INTERACT_RADIUS,
   ROCKET_PAD_POS,
@@ -845,11 +846,9 @@ export function SurvivalCanvas({
   const handlePointerDown = (e: ReactPointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
-
-    const worldX = ((e.clientX - rect.left) / rect.width) * WORLD_WIDTH;
-    const worldY = ((e.clientY - rect.top) / rect.height) * WORLD_HEIGHT;
+    const pt = clientPointToWorldPoint(e.clientX, e.clientY, canvas.getBoundingClientRect());
+    if (!pt) return;
+    const { x: worldX, y: worldY } = pt;
 
     for (const id of STATION_ORDER) {
       const stPos = STATIONS[id].pos;

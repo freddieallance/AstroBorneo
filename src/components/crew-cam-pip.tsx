@@ -138,34 +138,34 @@ export function CrewCamPip({
 
   return (
     <div
-      className="pointer-events-auto w-[166px] overflow-hidden rounded-2xl border-2 border-white bg-[#fffefa] text-[#344270] shadow-[0_12px_28px_-8px_rgba(20,24,62,0.45)] sm:w-[214px]"
+      className="pointer-events-auto w-[148px] shrink-0 overflow-hidden rounded-2xl border-2 border-white bg-[#fffefa] text-[#344270] shadow-[0_10px_24px_-8px_rgba(20,24,62,0.42)] sm:w-[194px]"
       data-testid="crew-cam-pip"
     >
-      <div className="flex items-center justify-between border-b border-[#e5eaf8] bg-[#f3f5ff] px-2 py-0.5 sm:px-2.5 sm:py-1">
+      <div className="flex items-center justify-between border-b border-[#e5eaf8] bg-[#f3f5ff] px-2 py-0.5">
         <div className="flex items-center gap-1">
           <Monitor className="h-3 w-3 text-[#4d62a8]" />
-          <span className="font-display text-[9px] font-extrabold uppercase tracking-wide text-[#344270] sm:text-[10px]">
+          <span className="font-display text-[9px] font-extrabold uppercase tracking-wide text-[#344270] sm:text-[9.5px]">
             Crew Cam (2)
           </span>
         </div>
-        <span className="h-2 w-2 rounded-full bg-[#49be8f]" aria-hidden />
+        <span className="h-1.5 w-1.5 rounded-full bg-[#49be8f]" aria-hidden />
       </div>
 
       <canvas
         ref={canvasRef}
-        width={214}
-        height={58}
+        width={194}
+        height={44}
         className="block w-full bg-[#5a568a]"
         aria-label="Small live monitor showing the other two astronauts working inside the Moon Base"
       />
 
-      <div className="grid grid-cols-2 divide-x divide-[#e5eaf8] bg-[#fffefa] px-0.5 py-0.5 text-center sm:py-1">
+      <div className="grid grid-cols-2 divide-x divide-[#e5eaf8] bg-[#fffefa] px-0.5 py-0.5 text-center">
         {crew.map((mate) => (
           <div key={mate.profile.id} className="px-1">
-            <p className="truncate font-display text-[9.5px] font-extrabold text-[#222a5b] sm:text-[10.5px]">
+            <p className="truncate font-display text-[9px] font-extrabold text-[#222a5b] sm:text-[10px]">
               {mate.profile.shortName}
             </p>
-            <p className="truncate font-mono text-[8.5px] font-extrabold text-[#5a6c9c] sm:text-[9px]">
+            <p className="truncate font-mono text-[8px] font-extrabold text-[#5a6c9c] sm:text-[8.5px]">
               {mate.taskLabel}
             </p>
           </div>

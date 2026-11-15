@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   applyStationAction,
+  clientPointToWorldPoint,
   countOperationalStations,
   createSurvivalWorld,
   EVAC_ANIMATION_SEC,
@@ -10,6 +11,8 @@ import {
   STATIONS,
   stepSurvivalWorld,
   WALK_BOUNDS,
+  WORLD_HEIGHT,
+  WORLD_WIDTH,
 } from './survival-engine';
 
 test('initializes world with 6 healthy stations, player astronaut, and NPC partner', () => {
@@ -153,4 +156,23 @@ test('indoor crew advances tasks across cycles and boosts resources', () => {
     state = stepSurvivalWorld(state, 0.05, { dx: 0, dy: 0 }).state;
   }
   assert.notEqual(state.indoorCrew[0].taskLabel, initialTaskA);
+});
+
+test('clientPointToWorldPoint maps clicks accurately on pillarboxed and letterboxed viewports', () => {
+  // Exact 1000x540 match
+  assert.deepEqual(
+    clientPointToWorldPoint(500, 270, { left: 0, top: 0, width: 1000, height: 540 }),
+    { x: WORLD_WIDTH / 2, y: WORLD_HEIGHT / 2 },
+  );
+
+  // Narrow/tall mobile container: rendered height = 390 * (540/1000) = 210.6, centered vertically
+  const tallRect = { left: 0, top: 100, width: 390, height: 400 };
+  const centerTall = clientPointToWorldPoint(195, 300, tallRect);
+  assert.ok(centerTall && Math.abs(centerTall.x - 500) < 0.01 && Math.abs(centerTall.y - 270) < 0.01);
+
+  // Ultra-wide container: height limits scale, horizontally pillarboxed
+  const wideRect = { left: 20, top: 0, width: 1400, height: 540 };
+  // Rendered width = 1000, offsetX = (1400 - 1000)/2 = 200 -> left edge of scene is 20 + 200 = 220
+  const leftEdge = clientPointToWorldPoint(220, 270, wideRect);
+  assert.ok(leftEdge && Math.abs(leftEdge.x - 0) < 0.01 && Math.abs(leftEdge.y - 270) < 0.01);
 });

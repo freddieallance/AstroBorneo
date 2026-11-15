@@ -351,7 +351,7 @@ export default function JudgeDemo() {
 
   return (
     <div
-      className="relative flex h-[100dvh] w-full flex-col overflow-hidden text-ink"
+      className="relative flex h-[100dvh] w-full flex-col overflow-x-hidden overflow-y-auto [@media(min-height:600px)]:overflow-hidden text-ink"
       style={{
         background:
           'radial-gradient(circle at 12% 8%, rgba(86, 92, 148, 0.88), transparent 40%), linear-gradient(150deg, #252d66 0%, #151b42 100%)',
@@ -360,17 +360,18 @@ export default function JudgeDemo() {
     >
       {/* Top Story Guide HUD: Matches Moon Base Cream Storybook Card */}
       <header className="z-30 mx-2.5 mt-2 shrink-0 rounded-[20px] border-2 border-white bg-[#fffefa] px-3 py-2 shadow-[0_8px_22px_rgba(8,14,42,0.22)] lg:mx-3 lg:px-4">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-2 lg:flex-nowrap">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-2 xl:flex-nowrap">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 sm:flex-none">
             <span
               className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[#ffca6b] bg-[#ffe7a1]/80 px-2.5 py-1 font-display text-[11px] font-extrabold uppercase tracking-wider text-[#364272]"
               data-testid="badge-demo-scenario"
             >
-              <Sparkles className="h-3.5 w-3.5" aria-hidden /> How to Play · Story Guide
+              <Sparkles className="h-3.5 w-3.5" aria-hidden />
+              <span className="hidden 2xl:inline">How to Play · </span>Story Guide
             </span>
 
             <span
-              className="shrink-0 rounded-xl border border-[#dce3fa] bg-[#f4f7ff] px-2.5 py-1 font-mono text-xs font-bold text-[#222a5b] tabular-nums"
+              className="shrink-0 rounded-xl border border-[#dce3fa] bg-[#f4f7ff] px-2 py-1 font-mono text-xs font-bold text-[#222a5b] tabular-nums"
               data-testid="text-demo-cycle"
             >
               C{activeState.cycle}/5
@@ -381,7 +382,7 @@ export default function JudgeDemo() {
               onClick={() => setSourcesOpen(true)}
               data-testid="button-demo-nasa-mode"
               className={cn(
-                'inline-flex max-w-[165px] items-center gap-1 truncate rounded-xl border px-2.5 py-1 font-mono text-[10px] font-bold transition hover:brightness-95 sm:max-w-none',
+                'inline-flex max-w-[132px] items-center gap-1 truncate rounded-xl border px-2 py-1 font-mono text-[10px] font-bold transition hover:brightness-95 sm:max-w-[160px] 2xl:max-w-none',
                 hasArchivedOrLiveContext
                   ? 'border-[#b9d9ff] bg-[#eef6ff] text-[#2374b8]'
                   : 'border-[#ffdca6] bg-[#fff8e8] text-[#b86b0d]',
@@ -394,7 +395,7 @@ export default function JudgeDemo() {
           </div>
 
           {/* Real Engine Resource Strip */}
-          <div className="order-3 grid w-full grid-cols-3 gap-1.5 sm:grid-cols-6 lg:order-2 lg:flex lg:w-auto lg:flex-1 lg:items-center lg:justify-center" data-testid="demo-hud-resources">
+          <div className="order-3 grid w-full grid-cols-3 gap-1.5 sm:grid-cols-6 xl:order-2 xl:flex xl:w-auto xl:flex-1 xl:items-center xl:justify-center" data-testid="demo-hud-resources">
             {HUD_KEYS.map((k) => {
               const val = activeState.resources[k];
               const d = previewDeltas ? previewDeltas[k] : null;
@@ -402,14 +403,14 @@ export default function JudgeDemo() {
                 <div
                   key={k}
                   data-testid={`demo-hud-${k}`}
-                  className="flex items-center gap-1.5 rounded-xl border border-[#dfe5fa] bg-[#f4f7ff] px-2 py-1 lg:min-w-[88px]"
+                  className="flex items-center gap-1.5 rounded-xl border border-[#dfe5fa] bg-[#f4f7ff] px-2 py-1 xl:min-w-[66px] 2xl:min-w-[84px]"
                 >
                   <span style={{ color: tone(val) }} className="shrink-0">
                     <ResourceIcon k={k} className="h-3.5 w-3.5" />
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline justify-between gap-0.5">
-                      <span className="hidden text-[10px] font-bold uppercase text-[#5b6b94] xl:inline">
+                      <span className="hidden text-[10px] font-bold uppercase text-[#5b6b94] 2xl:inline">
                         {k === 'safety' ? 'Safe' : k === 'power' ? 'Pwr' : RESOURCE_META[k].label}
                       </span>
                       <span className="font-mono text-xs font-bold tabular-nums text-[#222a5b]" data-testid={`demo-hud-value-${k}`}>
@@ -435,14 +436,14 @@ export default function JudgeDemo() {
                 </div>
               );
             })}
-            <div className="flex items-center justify-center gap-1 rounded-xl border border-[#dfe5fa] bg-[#f4f7ff] px-2 py-1" data-testid="demo-hud-science">
+            <div className="flex items-center justify-center gap-1 rounded-xl border border-[#dfe5fa] bg-[#f4f7ff] px-2 py-1 shrink-0" data-testid="demo-hud-science">
               <ResourceIcon k="science" className="h-3.5 w-3.5 text-ion" />
               <span className="font-mono text-xs font-bold tabular-nums text-[#222a5b]">{activeState.science}</span>
             </div>
           </div>
 
           {/* Right Controls: Music, Sound, Replay, Exit Guide */}
-          <div className="order-2 flex shrink-0 items-center gap-1.5 lg:order-3">
+          <div className="order-2 flex shrink-0 items-center gap-1.5 xl:order-3">
             <button
               type="button"
               onClick={toggleMusic}
@@ -457,7 +458,7 @@ export default function JudgeDemo() {
               aria-label={musicOn ? 'Turn off background music' : 'Turn on background music'}
             >
               <Music className="h-3.5 w-3.5" aria-hidden />
-              <span className="hidden xl:inline">{musicOn ? 'Music On' : 'Music Off'}</span>
+              <span className="hidden 2xl:inline">{musicOn ? 'Music On' : 'Music Off'}</span>
             </button>
             {isSpeechSupported() && (
               <button
@@ -482,24 +483,32 @@ export default function JudgeDemo() {
               title="One-tap Replay Guide"
             >
               <RotateCcw className="h-3.5 w-3.5 text-[#2374b8]" />
-              <span className="hidden sm:inline">Replay</span>
+              <span className="hidden 2xl:inline">Replay</span>
             </button>
             <button
               type="button"
               onClick={handleExitDemo}
-              className="inline-flex h-9 items-center gap-1 rounded-xl border border-[#f5c7a8] bg-[#fff5eb] px-3 text-xs font-bold text-[#b86b0d] hover:bg-[#ffedd9]"
+              className="inline-flex h-9 shrink-0 items-center gap-1 whitespace-nowrap rounded-xl border border-[#f5c7a8] bg-[#fff5eb] px-2.5 text-xs font-bold text-[#b86b0d] hover:bg-[#ffedd9] sm:px-3"
               data-testid="button-demo-exit"
             >
-              <X className="h-3.5 w-3.5" /> Exit Guide
+              <X className="h-3.5 w-3.5 shrink-0" />
+              <span>Exit Guide</span>
             </button>
           </div>
         </div>
       </header>
 
       {/* Main Persistent Moon Base Stage */}
-      <main className="relative flex flex-1 flex-col gap-2 overflow-hidden px-2.5 py-2 lg:px-3">
-        <div className="relative flex-1 overflow-hidden rounded-[22px] border-4 border-white shadow-[0_14px_34px_rgba(8,14,42,0.28)]">
-          <LunarScene
+      <main className="relative flex flex-1 min-h-[240px] flex-col gap-1.5 overflow-hidden px-2.5 py-1.5 lg:px-3">
+        <div className="relative flex flex-1 min-h-0 items-center justify-center overflow-hidden rounded-[22px] border-4 border-white bg-[#52497e] shadow-[0_14px_34px_rgba(8,14,42,0.28)] [container-type:size]">
+          <div
+            className="relative"
+            style={{
+              width: 'min(100cqw, calc(100cqh * 1000 / 540), 1440px)',
+              height: 'min(100cqh, calc(100cqw * 540 / 1000), calc(1440px * 540 / 1000))',
+            }}
+          >
+            <LunarScene
             statuses={statuses}
             onSelect={(id) => {
               playMusicalBeep(true);
@@ -530,12 +539,13 @@ export default function JudgeDemo() {
               recoveringModules,
             }}
           />
+          </div>
 
           {/* Step 1: How to Play Commander Welcome Card */}
           {currentStep.id === 'welcome' && (
-            <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex justify-center md:bottom-5">
+            <div className="pointer-events-none absolute inset-0 z-20 flex items-end justify-center p-2.5 sm:p-4">
               <div
-                className="pointer-events-auto w-full max-w-lg rounded-3xl border-[3px] border-white bg-[#fffefa] p-4 shadow-[0_14px_34px_rgba(8,14,42,0.28)]"
+                className="pointer-events-auto max-h-full w-full max-w-lg overflow-y-auto rounded-3xl border-[3px] border-white bg-[#fffefa] p-4 shadow-[0_14px_34px_rgba(8,14,42,0.28)]"
                 data-testid="demo-card-welcome"
               >
                 <div className="flex items-start justify-between gap-3">
@@ -579,9 +589,9 @@ export default function JudgeDemo() {
 
           {/* Step 2: 6-Facility Spotlight with Tiny Icon Cues */}
           {currentStep.id === 'facilities' && (
-            <div className="pointer-events-none absolute inset-x-3 top-3 z-20 flex justify-center md:inset-x-auto md:left-5 md:top-4">
+            <div className="pointer-events-none absolute inset-0 z-20 flex items-start justify-center p-2.5 md:justify-start md:p-4">
               <div
-                className="pointer-events-auto w-full max-w-md rounded-2xl border border-aqua/45 bg-hull p-3.5 shadow-2xl"
+                className="pointer-events-auto max-h-full w-full max-w-md overflow-y-auto rounded-2xl border border-aqua/45 bg-hull p-3.5 shadow-2xl"
                 data-testid="demo-card-facilities"
               >
                 {(() => {
@@ -643,9 +653,9 @@ export default function JudgeDemo() {
 
           {/* Step 3: Real Engineering Trade-Off (Eco vs Boost on Crew Home) */}
           {currentStep.id === 'tradeoff' && (
-            <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex justify-center md:bottom-4">
+            <div className="pointer-events-none absolute inset-0 z-20 flex items-end justify-center p-2.5 sm:p-4">
               <div
-                className="pointer-events-auto w-full max-w-2xl rounded-2xl border border-aqua/45 bg-hull p-4 shadow-2xl"
+                className="pointer-events-auto max-h-full w-full max-w-2xl overflow-y-auto rounded-2xl border border-aqua/45 bg-hull p-3.5 shadow-2xl sm:p-4"
                 data-testid="demo-card-tradeoff"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -721,9 +731,9 @@ export default function JudgeDemo() {
 
           {/* Step 4: Actual Cycle 2 Low Sun Event at Sun Power */}
           {currentStep.id === 'event' && (
-            <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex justify-center md:bottom-4">
+            <div className="pointer-events-none absolute inset-0 z-20 flex items-end justify-center p-2.5 sm:p-4">
               <div
-                className="pointer-events-auto w-full max-w-2xl rounded-2xl border border-warn/50 bg-hull p-4 shadow-2xl"
+                className="pointer-events-auto max-h-full w-full max-w-2xl overflow-y-auto rounded-2xl border border-warn/50 bg-hull p-3.5 shadow-2xl sm:p-4"
                 data-testid="demo-card-event"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -798,9 +808,9 @@ export default function JudgeDemo() {
 
           {/* Step 5: Actual Engine Output & Visible Building Response */}
           {currentStep.id === 'calculate' && demoReview && session.committedState && (
-            <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex justify-center md:bottom-4">
+            <div className="pointer-events-none absolute inset-0 z-20 flex items-end justify-center p-2.5 sm:p-4">
               <div
-                className="pointer-events-auto w-full max-w-xl rounded-2xl border border-ok/50 bg-hull p-4 shadow-2xl"
+                className="pointer-events-auto max-h-full w-full max-w-xl overflow-y-auto rounded-2xl border border-ok/50 bg-hull p-3.5 shadow-2xl sm:p-4"
                 data-testid="demo-card-calculate"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
