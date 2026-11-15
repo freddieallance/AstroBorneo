@@ -9,12 +9,12 @@ function LinkList({ items }: { items: SourceLink[] }) {
   return (
     <ul className="space-y-3">
       {items.map((s) => (
-        <li key={s.url} className="rounded-xl bg-deep/40 p-3">
+        <li key={s.url} className="rounded-xl border border-[#dfe5fa] bg-[#f4f7ff] p-3">
           <a href={s.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 font-semibold text-aqua hover:underline" data-testid={`link-source-${s.title.slice(0, 16).replace(/\W/g, '')}`}>
             {s.title} <ExternalLink className="h-3.5 w-3.5" />
           </a>
           <p className="text-xs text-dim">{s.org}</p>
-          <p className="mt-1 text-sm">{s.note}</p>
+          <p className="mt-1 text-sm text-ink">{s.note}</p>
         </li>
       ))}
     </ul>
@@ -27,9 +27,9 @@ export default function About() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="hud-label">About and NASA Sources</p>
-          <h1 className="text-3xl font-bold md:text-4xl">Why AstroBorneo exists</h1>
-          <p className="mt-2 max-w-3xl text-lg text-dim">
+          <p className="hud-label !text-[#ffe49e]">About and NASA Sources</p>
+          <h1 className="text-3xl font-bold text-white md:text-4xl">Why AstroBorneo exists</h1>
+          <p className="mt-2 max-w-3xl text-lg text-[#dce4ff]">
             AstroBorneo helps kids aged 7 to 12 feel the real engineering trade-offs of living on the Moon: life support, radiation protection, power budgets, food and communication. It was created for the 2026 NASA Space Apps Challenge, "Build a Junior Astronaut Mission Trainer".
           </p>
         </div>

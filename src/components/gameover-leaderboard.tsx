@@ -59,26 +59,30 @@ export function GameOverLeaderboard({
 
   return (
     <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-deep/95 p-4 sm:p-6"
+      className="fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6"
+      style={{
+        background:
+          'radial-gradient(circle at 12% 8%, rgba(86,92,148,0.92), transparent 40%), linear-gradient(150deg, #252d66 0%, #151b42 100%)',
+      }}
       role="dialog"
       aria-modal="true"
       aria-label="Mission Ended - Returned to Earth"
       data-testid="gameover-screen"
     >
-      <div className="mx-auto max-w-4xl space-y-5 py-2">
+      <div className="mx-auto max-w-4xl space-y-5 py-2 text-[#344270]">
         {/* Top Hero Banner */}
-        <div className="rounded-3xl border-2 border-warn/55 bg-hull p-5 shadow-2xl sm:p-6">
+        <div className="rounded-[28px] border-4 border-white bg-[#fffefa] p-5 shadow-[0_22px_50px_-14px_rgba(10,14,42,0.58)] sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
               <AstronautAvatar profile={playerProfile} size={64} className="shrink-0" />
               <div>
-                <p className="font-mono text-xs font-extrabold uppercase tracking-wider text-warn">
+                <p className="inline-block rounded-full bg-[#fff3d6] px-2.5 py-0.5 font-mono text-[11px] font-extrabold uppercase tracking-wider text-[#9b6110]">
                   Emergency Evacuation Complete
                 </p>
-                <h1 className="font-display text-2xl font-extrabold text-ink sm:text-3xl">
+                <h1 className="mt-1 font-display text-2xl font-extrabold text-[#222a5b] sm:text-3xl">
                   {titleText}
                 </h1>
-                <p className="mt-1 text-sm font-semibold text-dim">
+                <p className="mt-1 text-sm font-semibold text-[#5b6c94]">
                   {report.evacReason === 'crew_unsafe'
                     ? `${playerProfile.name} & crew flew home because life resources dropped too low.`
                     : `${playerProfile.name} survived until every Moon station went offline.`}
@@ -87,30 +91,30 @@ export function GameOverLeaderboard({
             </div>
 
             <div className="grid shrink-0 grid-cols-4 gap-2 text-center">
-              <div className="min-w-[74px] rounded-2xl border border-aqua/35 bg-deep/85 px-2.5 py-2">
-                <span className="block font-mono text-[10px] font-bold uppercase text-dim">Time</span>
+              <div className="min-w-[74px] rounded-2xl border-2 border-[#cce2ff] bg-[#edf6ff] px-2.5 py-2">
+                <span className="block font-mono text-[10px] font-extrabold uppercase text-[#566894]">Time</span>
                 <span
-                  className="font-mono text-lg font-extrabold text-aqua tabular-nums sm:text-xl"
+                  className="font-mono text-lg font-extrabold text-[#2c78b8] tabular-nums sm:text-xl"
                   data-testid="gameover-survival-time"
                 >
                   {formatSurvivalTime(report.survivalSeconds)}
                 </span>
               </div>
-              <div className="min-w-[64px] rounded-2xl border border-warn/35 bg-deep/85 px-2.5 py-2">
-                <span className="block font-mono text-[10px] font-bold uppercase text-dim">Sols</span>
-                <span className="font-mono text-lg font-extrabold text-warn tabular-nums sm:text-xl">
+              <div className="min-w-[64px] rounded-2xl border-2 border-[#ffe0a6] bg-[#fff7e6] px-2.5 py-2">
+                <span className="block font-mono text-[10px] font-extrabold uppercase text-[#8f6420]">Sols</span>
+                <span className="font-mono text-lg font-extrabold text-[#b86d10] tabular-nums sm:text-xl">
                   {report.solsSurvived}
                 </span>
               </div>
-              <div className="min-w-[64px] rounded-2xl border border-ok/35 bg-deep/85 px-2.5 py-2">
-                <span className="block font-mono text-[10px] font-bold uppercase text-dim">Fixed</span>
-                <span className="font-mono text-lg font-extrabold text-ok tabular-nums sm:text-xl">
+              <div className="min-w-[64px] rounded-2xl border-2 border-[#b8edd4] bg-[#e9faf2] px-2.5 py-2">
+                <span className="block font-mono text-[10px] font-extrabold uppercase text-[#256f4f]">Fixed</span>
+                <span className="font-mono text-lg font-extrabold text-[#1e7a54] tabular-nums sm:text-xl">
                   {report.miniGamesWon}
                 </span>
               </div>
-              <div className="min-w-[72px] rounded-2xl border border-bad/35 bg-deep/85 px-2.5 py-2">
-                <span className="block font-mono text-[10px] font-bold uppercase text-dim">Crew HP</span>
-                <span className="font-mono text-lg font-extrabold text-bad tabular-nums sm:text-xl">
+              <div className="min-w-[72px] rounded-2xl border-2 border-[#ffc7d0] bg-[#fff0f3] px-2.5 py-2">
+                <span className="block font-mono text-[10px] font-extrabold uppercase text-[#9f3351]">Crew HP</span>
+                <span className="font-mono text-lg font-extrabold text-[#c43a51] tabular-nums sm:text-xl">
                   {report.finalCrewHealth}%
                 </span>
               </div>
@@ -120,27 +124,31 @@ export function GameOverLeaderboard({
 
         <div className="grid gap-5 lg:grid-cols-[1fr_1.15fr]">
           {/* Left: Why We Failed & Final Resources Snapshot */}
-          <div className="space-y-4 rounded-3xl border border-bad/45 bg-hull p-5 shadow-xl" data-testid="gameover-failure-cause">
+          <div
+            className="space-y-4 rounded-[28px] border-4 border-white bg-[#fffefa] p-5 shadow-[0_20px_44px_-12px_rgba(10,14,42,0.5)]"
+            data-testid="gameover-failure-cause"
+          >
             <div className="flex items-center gap-2.5">
-              <AlertTriangle className="h-6 w-6 text-bad" />
-              <h2 className="font-display text-xl font-extrabold text-ink">
-                Why We Had to Return to Earth
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#fff0f2] text-[#c43a51]">
+                <AlertTriangle className="h-5 w-5" />
+              </span>
+              <h2 className="font-display text-xl font-extrabold text-[#222a5b]">
+                Why We Returned to Earth
               </h2>
             </div>
 
-            <div className="rounded-2xl border border-bad/35 bg-bad/10 p-4">
-              <p className="font-display text-base font-extrabold text-bad">
+            <div className="rounded-2xl border-2 border-[#ffc7d0] bg-[#fff2f4] p-4">
+              <p className="font-display text-base font-extrabold text-[#c43a51]">
                 {report.causeHeadline}
               </p>
-              <p className="mt-1 text-sm font-semibold text-ink">
+              <p className="mt-1 text-sm font-semibold text-[#45547a]">
                 {report.causeDetail}
               </p>
             </div>
 
-            {/* Final Base Resources Snapshot */}
             <div>
-              <p className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-dim">
-                <Heart className="h-3.5 w-3.5 text-bad" /> Final Base Resources Left
+              <p className="flex items-center gap-1.5 font-mono text-xs font-extrabold uppercase tracking-wider text-[#5b6c94]">
+                <Heart className="h-3.5 w-3.5 text-[#c43a51]" /> Final Base Resources Left
               </p>
               <div className="mt-2 grid grid-cols-5 gap-1.5 text-center">
                 {RESOURCE_KEYS.map((k) => {
@@ -149,11 +157,13 @@ export function GameOverLeaderboard({
                     <div
                       key={k}
                       className={cn(
-                        'rounded-xl border px-1.5 py-2',
-                        val < 30 ? 'border-bad bg-bad/15 text-bad' : 'border-dim/20 bg-deep/75 text-ink',
+                        'rounded-xl border-2 px-1.5 py-2',
+                        val < 30
+                          ? 'border-[#ffc7d0] bg-[#fff0f2] text-[#c43a51]'
+                          : 'border-[#e4e9f8] bg-[#f5f7ff] text-[#222a5b]',
                       )}
                     >
-                      <span className="block font-display text-[10px] font-bold text-dim">
+                      <span className="block font-display text-[10px] font-extrabold text-[#607094]">
                         {RESOURCE_LABELS[k]}
                       </span>
                       <span className="font-mono text-xs font-extrabold tabular-nums">
@@ -167,19 +177,19 @@ export function GameOverLeaderboard({
 
             {report.failureOrder.length > 0 && (
               <div>
-                <p className="font-mono text-xs font-bold uppercase tracking-wider text-dim">
+                <p className="font-mono text-xs font-extrabold uppercase tracking-wider text-[#5b6c94]">
                   Station Failure Order
                 </p>
                 <div className="mt-2 space-y-1.5">
                   {report.failureOrder.map((item, idx) => (
                     <div
                       key={item.id}
-                      className="flex items-center justify-between gap-2 rounded-xl border border-dim/20 bg-deep/75 px-3 py-2 text-xs"
+                      className="flex items-center justify-between gap-2 rounded-xl border-2 border-[#eaeeff] bg-[#f5f7ff] px-3 py-2 text-xs"
                     >
-                      <span className="font-display font-bold text-ink">
+                      <span className="font-display font-extrabold text-[#222a5b]">
                         #{idx + 1} {item.label}
                       </span>
-                      <span className="font-mono font-bold text-bad tabular-nums">
+                      <span className="font-mono font-extrabold text-[#c43a51] tabular-nums">
                         at {formatSurvivalTime(item.failedAtSec)}
                       </span>
                     </div>
@@ -190,22 +200,28 @@ export function GameOverLeaderboard({
           </div>
 
           {/* Right: Save Name + Competitive Highscore Leaderboard */}
-          <div className="space-y-4 rounded-3xl border border-aqua/40 bg-hull p-5 shadow-xl">
+          <div className="space-y-4 rounded-[28px] border-4 border-white bg-[#fffefa] p-5 shadow-[0_20px_44px_-12px_rgba(10,14,42,0.5)]">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2.5">
-                <Trophy className="h-6 w-6 text-warn" />
-                <h2 className="font-display text-xl font-extrabold text-ink">
+                <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#fff3d6] text-[#d98a1c]">
+                  <Trophy className="h-5 w-5" />
+                </span>
+                <h2 className="font-display text-xl font-extrabold text-[#222a5b]">
                   Moon Survival Highscores
                 </h2>
               </div>
-              <span className="inline-flex items-center gap-1 font-mono text-xs font-bold text-aqua">
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#eef2ff] px-2.5 py-1 font-mono text-[11px] font-extrabold text-[#4e619e]">
                 <Clock className="h-3.5 w-3.5" /> Longest Wins
               </span>
             </div>
 
             {!submittedId ? (
-              <form onSubmit={handleSubmit} className="rounded-2xl border border-ok/45 bg-deep/85 p-4" data-testid="leaderboard-form">
-                <label htmlFor="astro-player-name" className="block font-display text-sm font-extrabold text-ink">
+              <form
+                onSubmit={handleSubmit}
+                className="rounded-2xl border-2 border-[#b8edd4] bg-[#ebfaf3] p-4"
+                data-testid="leaderboard-form"
+              >
+                <label htmlFor="astro-player-name" className="block font-display text-sm font-extrabold text-[#1e6d4a]">
                   Put your name on the Highscore Board!
                 </label>
                 <div className="mt-2.5 flex flex-col gap-2.5 sm:flex-row">
@@ -217,36 +233,35 @@ export function GameOverLeaderboard({
                     onChange={(e) => setNameInput(e.target.value)}
                     placeholder="Type your name..."
                     data-testid="input-highscore-name"
-                    className="min-h-[48px] flex-1 rounded-xl border-2 border-dim/30 bg-hull px-3.5 font-display text-base font-bold text-ink placeholder:text-dim/60 focus:border-aqua focus:outline-none"
+                    className="min-h-[48px] flex-1 rounded-xl border-2 border-[#cce4d8] bg-white px-3.5 font-display text-base font-bold text-[#222a5b] placeholder:text-[#8997b8] focus:border-[#49be8f] focus:outline-none"
                   />
                   <button
                     type="submit"
                     data-testid="button-save-highscore"
-                    className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border-b-4 border-[#139c73] bg-ok px-5 font-display text-base font-extrabold text-deep hover:brightness-110 active:translate-y-0.5"
+                    className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-[#ffe7a1] to-[#ffca6b] px-5 font-display text-base font-extrabold text-[#364272] shadow-[0_4px_0_#e7a959] hover:brightness-105 active:translate-y-0.5"
                   >
                     <Award className="h-5 w-5" />
                     Save Score!
                   </button>
                 </div>
                 {formError && (
-                  <p className="mt-2 text-xs font-bold text-bad" role="alert">
+                  <p className="mt-2 text-xs font-extrabold text-[#c43a51]" role="alert">
                     {formError}
                   </p>
                 )}
               </form>
             ) : (
               <div
-                className="flex items-center gap-3 rounded-2xl border-2 border-ok bg-ok/15 px-4 py-3"
+                className="flex items-center gap-3 rounded-2xl border-2 border-[#49be8f] bg-[#e5f9ef] px-4 py-3"
                 data-testid="leaderboard-saved-banner"
               >
-                <Trophy className="h-6 w-6 shrink-0 text-warn" />
-                <p className="font-display text-base font-extrabold text-ok">
+                <Trophy className="h-6 w-6 shrink-0 text-[#d98a1c]" />
+                <p className="font-display text-base font-extrabold text-[#1e7a54]">
                   Saved! You ranked #{submittedRank} on the Moon Survival Board!
                 </p>
               </div>
             )}
 
-            {/* Ranked List */}
             <div className="max-h-[260px] space-y-2 overflow-y-auto pr-1" data-testid="leaderboard-list">
               {entries.slice(0, 8).map((entry, idx) => {
                 const astro = getAstronaut(entry.astronautId);
@@ -256,42 +271,42 @@ export function GameOverLeaderboard({
                     key={entry.id}
                     data-testid={`leaderboard-row-${idx}`}
                     className={cn(
-                      'flex items-center gap-3 rounded-2xl border px-3.5 py-2.5',
+                      'flex items-center gap-3 rounded-2xl border-2 px-3.5 py-2.5',
                       isNew
-                        ? 'border-ok bg-ok/15'
+                        ? 'border-[#49be8f] bg-[#e5f9ef]'
                         : idx === 0
-                          ? 'border-warn/50 bg-warn/10'
-                          : 'border-dim/20 bg-deep/75',
+                          ? 'border-[#ffcf79] bg-[#fff5dc]'
+                          : 'border-[#e6ebfa] bg-[#f5f7ff]',
                     )}
                   >
                     <span
                       className={cn(
                         'grid h-8 w-8 shrink-0 place-items-center rounded-xl font-mono text-sm font-extrabold',
                         idx === 0
-                          ? 'bg-warn text-deep'
+                          ? 'bg-[#ffc56f] text-[#364272]'
                           : idx === 1
-                            ? 'bg-aqua text-deep'
+                            ? 'bg-[#76dbae] text-[#1d4c3b]'
                             : idx === 2
-                              ? 'bg-ion text-deep'
-                              : 'bg-plate text-dim',
+                              ? 'bg-[#b4a0ef] text-white'
+                              : 'bg-[#e3e8f8] text-[#5e6d94]',
                       )}
                     >
                       #{idx + 1}
                     </span>
                     <AstronautAvatar profile={astro} size={36} className="shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-display text-sm font-extrabold text-ink">
+                      <p className="truncate font-display text-sm font-extrabold text-[#222a5b]">
                         {entry.playerName}
                       </p>
-                      <p className="truncate text-[11px] font-semibold text-dim">
+                      <p className="truncate text-[11px] font-semibold text-[#607094]">
                         {astro.shortName} · Cause: {entry.firstFailedStation}
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="block font-mono text-base font-extrabold text-aqua tabular-nums">
+                      <span className="block font-mono text-base font-extrabold text-[#364272] tabular-nums">
                         {formatSurvivalTime(entry.survivalSeconds)}
                       </span>
-                      <span className="block font-mono text-[10px] font-bold text-dim tabular-nums">
+                      <span className="block font-mono text-[10px] font-bold text-[#607094] tabular-nums">
                         Sol {entry.solsSurvived}
                       </span>
                     </div>
@@ -312,7 +327,7 @@ export function GameOverLeaderboard({
             }}
             data-start="true"
             data-testid="button-gameover-play-again"
-            className="inline-flex min-h-[56px] items-center justify-center gap-2.5 rounded-2xl border-b-4 border-[#139c73] bg-ok px-9 font-display text-xl font-extrabold text-deep shadow-xl hover:brightness-110 active:translate-y-0.5"
+            className="inline-flex min-h-[56px] items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-b from-[#ffe7a1] to-[#ffca6b] px-9 font-display text-xl font-extrabold text-[#364272] shadow-[0_5px_0_#e7a959] hover:brightness-105 active:translate-y-0.5"
           >
             <RotateCcw className="h-6 w-6" />
             Play Again!
@@ -324,9 +339,9 @@ export function GameOverLeaderboard({
               onChangeAstronaut();
             }}
             data-testid="button-gameover-switch-astronaut"
-            className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-2xl border-2 border-dim/30 bg-plate px-6 font-display text-base font-extrabold text-ink hover:border-aqua"
+            className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-2xl border-2 border-white bg-white/95 px-6 font-display text-base font-extrabold text-[#344270] shadow-lg hover:bg-white"
           >
-            <Users className="h-5 w-5 text-aqua" />
+            <Users className="h-5 w-5 text-[#4e619e]" />
             Choose Astronaut
           </button>
         </div>

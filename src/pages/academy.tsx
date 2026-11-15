@@ -27,8 +27,8 @@ export default function Academy() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="hud-label">Learning Academy · Picture Quiz</p>
-          <h1 className="text-3xl font-bold md:text-4xl">Five questions from the outpost</h1>
+          <p className="hud-label !text-[#ffe49e]">Learning Academy · Picture Quiz</p>
+          <h1 className="text-3xl font-bold text-white md:text-4xl">Five questions from the outpost</h1>
         </div>
         <Link href="/base" className={btn.ghost} data-testid="link-academy-to-base">
           <Rocket className="h-4 w-4" /> Open on Moon Base Scene

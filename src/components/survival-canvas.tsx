@@ -26,6 +26,15 @@ interface Particle {
 
 const POOL_SIZE = 72;
 
+const STATION_PAD_COLORS: Record<ModuleId, { fill: string; emoji: string }> = {
+  solar: { fill: '#ffcf79', emoji: '☀️' },
+  habitat: { fill: '#a8dfff', emoji: '🏠' },
+  recycler: { fill: '#9ad9ff', emoji: '💧' },
+  greenhouse: { fill: '#a6e9b7', emoji: '🌱' },
+  shelter: { fill: '#cbb7f8', emoji: '🛡️' },
+  comms: { fill: '#ffc7d0', emoji: '📡' },
+};
+
 export function SurvivalCanvas({
   worldRef,
   paused = false,
@@ -60,10 +69,18 @@ export function SurvivalCanvas({
       life: 0,
       maxLife: 1,
       size: 2,
-      color: '#abb8d5',
+      color: '#ffe9a6',
     }));
     let poolCursor = 0;
-    const spawnParticle = (x: number, y: number, vx: number, vy: number, color: string, size = 2.5, maxLife = 0.55) => {
+    const spawnParticle = (
+      x: number,
+      y: number,
+      vx: number,
+      vy: number,
+      color: string,
+      size = 2.5,
+      maxLife = 0.55,
+    ) => {
       const p = pool[poolCursor];
       poolCursor = (poolCursor + 1) % POOL_SIZE;
       p.active = true;
@@ -94,24 +111,25 @@ export function SurvivalCanvas({
       label: string,
       isWorking = false,
       crewHealth = 100,
+      thoughtEmoji?: string,
     ) => {
-      const bob = moving ? Math.abs(Math.sin(walkPhase)) * 3.5 : Math.sin(performance.now() * 0.004) * 1;
+      const bob = moving ? Math.abs(Math.sin(walkPhase)) * 3.5 : Math.sin(performance.now() * 0.004) * 1.1;
       const legSwing = moving ? Math.sin(walkPhase) * 4.5 : 0;
 
       ctx.save();
       ctx.translate(x, y);
 
-      // Ground shadow
-      ctx.fillStyle = 'rgba(5, 9, 24, 0.55)';
+      // Soft indigo shadow
+      ctx.fillStyle = 'rgba(26, 20, 52, 0.34)';
       ctx.beginPath();
-      ctx.ellipse(0, 4, 14, 5, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 5, 15, 5.5, 0, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.save();
       ctx.translate(0, -bob);
 
       // Legs
-      ctx.fillStyle = '#b4c2df';
+      ctx.fillStyle = '#dce6ff';
       ctx.beginPath();
       ctx.roundRect(-7 + legSwing * 0.5, -6, 5.5, 9, 2.5);
       ctx.roundRect(1.5 - legSwing * 0.5, -6, 5.5, 9, 2.5);
@@ -131,10 +149,13 @@ export function SurvivalCanvas({
       ctx.fill();
 
       // Torso
-      ctx.fillStyle = '#f5f7ff';
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#344270';
+      ctx.lineWidth = 1.4;
       ctx.beginPath();
       ctx.roundRect(-9, -25, 18, 20, 6);
       ctx.fill();
+      ctx.stroke();
       ctx.fillStyle = trimColor;
       ctx.beginPath();
       ctx.roundRect(-5, -20, 10, 6, 2.5);
@@ -146,8 +167,8 @@ export function SurvivalCanvas({
         ctx.save();
         ctx.translate(facing * 9, -16);
         ctx.rotate(swing);
-        ctx.strokeStyle = '#ffc76b';
-        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#ffcf79';
+        ctx.lineWidth = 3.2;
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.lineTo(facing * 10, -8);
@@ -158,23 +179,23 @@ export function SurvivalCanvas({
       // Helmet
       ctx.fillStyle = '#ffffff';
       ctx.strokeStyle = trimColor;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.2;
       ctx.beginPath();
-      ctx.arc(0, -33, 11.5, 0, Math.PI * 2);
+      ctx.arc(0, -33, 12, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
 
-      // Visor
-      ctx.fillStyle = '#0f1938';
+      // Glossy sky-aqua visor
+      ctx.fillStyle = '#2d3b72';
       ctx.beginPath();
       ctx.roundRect(facing === 1 ? -4 : -9, -38, 13, 9, 4.5);
       ctx.fill();
-      ctx.fillStyle = visorColor;
+      ctx.fillStyle = visorColor || '#a8e3fa';
       ctx.beginPath();
       ctx.roundRect(facing === 1 ? -2.5 : -7.5, -36.5, 10, 6, 3);
       ctx.fill();
 
-      // Visor glare
+      // Visor shine
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 1.6;
       ctx.beginPath();
@@ -184,28 +205,47 @@ export function SurvivalCanvas({
 
       ctx.restore();
 
-      // Floating nameplate above actor
-      ctx.font = '700 11px "Outfit", sans-serif';
+      // Thought bubble for NPC partner showing which station they are helping
+      if (thoughtEmoji) {
+        const tbY = -88 + Math.sin(performance.now() * 0.005) * 2;
+        ctx.fillStyle = '#fff2d8';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(16, tbY, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(8, tbY + 13, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = '13px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(thoughtEmoji, 16, tbY + 1);
+      }
+
+      // Crisp white nameplate pill
+      ctx.font = '800 11px "Outfit", sans-serif';
       const tw = ctx.measureText(label).width + 14;
-      ctx.fillStyle = 'rgba(8, 13, 31, 0.88)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.94)';
       ctx.strokeStyle = trimColor;
-      ctx.lineWidth = 1.4;
+      ctx.lineWidth = 1.6;
       ctx.beginPath();
-      ctx.roundRect(-tw / 2, -62, tw, 17, 7);
+      ctx.roundRect(-tw / 2, -62, tw, 17, 8.5);
       ctx.fill();
       ctx.stroke();
-      ctx.fillStyle = '#f5f7ff';
+      ctx.fillStyle = '#344270';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(label, 0, -53.5);
 
-      // Astronaut Healthbar above nameplate
+      // Crew healthbar above nameplate
       const hpRatio = Math.max(0, Math.min(1, crewHealth / 100));
       const hpBarW = 54;
       const hpBarH = 6.5;
-      const hpColor = hpRatio >= 0.6 ? '#35d2a0' : hpRatio >= 0.3 ? '#ffc76b' : '#ff727e';
-      ctx.fillStyle = 'rgba(8, 13, 31, 0.92)';
-      ctx.strokeStyle = 'rgba(180, 194, 223, 0.45)';
+      const hpColor = hpRatio >= 0.6 ? '#76dbae' : hpRatio >= 0.3 ? '#ffc56f' : '#ff7b8a';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+      ctx.strokeStyle = '#d3daf0';
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.roundRect(-hpBarW / 2 - 1, -73, hpBarW + 2, hpBarH + 2, 3.5);
@@ -221,47 +261,71 @@ export function SurvivalCanvas({
       ctx.restore();
     };
 
-    const drawStation = (w: SurvivalWorldState, id: ModuleId, nowSec: number, isNear: boolean) => {
+    const drawStation = (
+      w: SurvivalWorldState,
+      id: ModuleId,
+      nowSec: number,
+      isNear: boolean,
+      isPriorityTarget: boolean,
+    ) => {
       const meta = STATIONS[id];
+      const pad = STATION_PAD_COLORS[id];
       const st = w.stations[id];
       const { x, y } = meta.pos;
       const pct = Math.max(0, Math.min(100, Math.round(st.health)));
       const col = st.failed
-        ? '#ff727e'
+        ? '#ff7b8a'
         : pct < 35
-          ? '#ff727e'
+          ? '#ff7b8a'
           : pct < 65
-            ? '#ffc76b'
-            : '#35d2a0';
+            ? '#ffb547'
+            : '#49be8f';
 
       ctx.save();
       ctx.translate(x, y);
 
-      // Proximity highlight ring
+      // Gold priority ring or aqua proximity ring
       if (isNear && !st.failed) {
         const pulse = 1 + Math.sin(nowSec * 6) * 0.05;
-        ctx.strokeStyle = '#35d9e8';
-        ctx.lineWidth = 3;
-        ctx.setLineDash([8, 6]);
+        ctx.strokeStyle = '#ffe16f';
+        ctx.lineWidth = 3.5;
+        ctx.setLineDash([8, 5]);
         ctx.beginPath();
-        ctx.ellipse(0, 6, 84 * pulse, 18 * pulse, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 6, 86 * pulse, 20 * pulse, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      } else if (isPriorityTarget && !st.failed) {
+        const pulse = 1 + Math.sin(nowSec * 4.5) * 0.04;
+        ctx.strokeStyle = 'rgba(255, 225, 111, 0.85)';
+        ctx.lineWidth = 2.6;
+        ctx.setLineDash([6, 6]);
+        ctx.beginPath();
+        ctx.ellipse(0, 6, 80 * pulse, 18 * pulse, 0, 0, Math.PI * 2);
         ctx.stroke();
         ctx.setLineDash([]);
       }
 
       // Repair flash aura
       if (st.repairFlashSec > 0) {
-        ctx.fillStyle = `rgba(53, 210, 160, ${Math.min(0.28, st.repairFlashSec * 0.25)})`;
+        ctx.fillStyle = `rgba(118, 219, 174, ${Math.min(0.36, st.repairFlashSec * 0.3)})`;
         ctx.beginPath();
-        ctx.ellipse(0, -24, 72, 48, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, -24, 74, 50, 0, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Base shadow
-      ctx.fillStyle = 'rgba(8, 13, 31, 0.5)';
+      // Pastel circular storybook pad beneath each station
+      ctx.fillStyle = 'rgba(25, 26, 56, 0.25)';
       ctx.beginPath();
-      ctx.ellipse(0, 4, 68, 11, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 4, 70, 15, 0, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.fillStyle = st.failed ? '#c7becf' : pad.fill;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(0, -2, 62, 13, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
 
       ctx.globalAlpha = st.failed ? 0.45 : 1;
 
@@ -269,22 +333,22 @@ export function SurvivalCanvas({
       switch (id) {
         case 'solar': {
           for (const dx of [-42, -14, 14]) {
-            ctx.fillStyle = '#6b7899';
+            ctx.fillStyle = '#dfe6fa';
             ctx.fillRect(dx + 10, -22, 4, 24);
-            ctx.fillStyle = st.failed ? '#2b2435' : '#1f4594';
-            ctx.strokeStyle = st.failed ? '#ff727e' : '#ffc76b';
-            ctx.lineWidth = 2;
+            ctx.fillStyle = st.failed ? '#5e4b5f' : '#2f5ac7';
+            ctx.strokeStyle = st.failed ? '#ff7b8a' : '#ffe184';
+            ctx.lineWidth = 2.2;
             ctx.beginPath();
-            ctx.roundRect(dx, -92, 24, 72, 3);
+            ctx.roundRect(dx, -92, 24, 72, 4);
             ctx.fill();
             ctx.stroke();
           }
           break;
         }
         case 'greenhouse': {
-          ctx.fillStyle = st.failed ? 'rgba(110, 58, 74, 0.25)' : 'rgba(53, 210, 160, 0.22)';
-          ctx.strokeStyle = st.failed ? '#ff727e' : '#35d2a0';
-          ctx.lineWidth = 2.4;
+          ctx.fillStyle = st.failed ? 'rgba(130, 82, 95, 0.35)' : 'rgba(166, 233, 183, 0.45)';
+          ctx.strokeStyle = st.failed ? '#ff7b8a' : '#ffffff';
+          ctx.lineWidth = 2.6;
           ctx.beginPath();
           ctx.moveTo(-54, 0);
           ctx.lineTo(-54, -26);
@@ -294,24 +358,27 @@ export function SurvivalCanvas({
           ctx.fill();
           ctx.stroke();
           for (const sx of [-28, 0, 28]) {
-            ctx.fillStyle = st.failed ? '#7c6572' : '#35d2a0';
+            ctx.fillStyle = st.failed ? '#7c6572' : '#40b87a';
             ctx.beginPath();
-            ctx.ellipse(sx, -14, 6, 12, 0, 0, Math.PI * 2);
+            ctx.ellipse(sx, -14, 6.5, 13, 0, 0, Math.PI * 2);
             ctx.fill();
           }
           break;
         }
         case 'habitat': {
-          ctx.fillStyle = '#c9d1e6';
+          ctx.fillStyle = '#eef2ff';
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.roundRect(-70, -48, 140, 48, 22);
           ctx.fill();
-          ctx.fillStyle = '#dfe5f5';
+          ctx.stroke();
+          ctx.fillStyle = '#ffffff';
           ctx.beginPath();
           ctx.arc(0, -48, 40, Math.PI, 0);
           ctx.fill();
           for (const wx of [-42, -14, 14, 42]) {
-            ctx.fillStyle = st.failed ? '#ff727e' : '#35d9e8';
+            ctx.fillStyle = st.failed ? '#ff7b8a' : '#70c8f5';
             ctx.beginPath();
             ctx.arc(wx, -24, 6, 0, Math.PI * 2);
             ctx.fill();
@@ -319,22 +386,25 @@ export function SurvivalCanvas({
           break;
         }
         case 'recycler': {
-          ctx.fillStyle = '#8fa7d4';
+          ctx.fillStyle = '#dcebff';
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1.8;
           ctx.beginPath();
           ctx.roundRect(-48, -56, 30, 56, 8);
           ctx.roundRect(-12, -44, 30, 44, 8);
           ctx.roundRect(24, -36, 26, 36, 7);
           ctx.fill();
-          ctx.fillStyle = st.failed ? '#ff727e' : '#35d9e8';
+          ctx.stroke();
+          ctx.fillStyle = st.failed ? '#ff7b8a' : '#53b7f2';
           ctx.beginPath();
-          ctx.arc(-33, -34, 7, 0, Math.PI * 2);
+          ctx.arc(-33, -34, 7.5, 0, Math.PI * 2);
           ctx.fill();
           break;
         }
         case 'shelter': {
-          ctx.fillStyle = '#545e78';
-          ctx.strokeStyle = w.shieldBoostSec > 0 ? '#35d2a0' : st.failed ? '#ff727e' : '#ffc76b';
-          ctx.lineWidth = 2.6;
+          ctx.fillStyle = '#736f9c';
+          ctx.strokeStyle = w.shieldBoostSec > 0 ? '#76dbae' : st.failed ? '#ff7b8a' : '#ffffff';
+          ctx.lineWidth = 2.8;
           ctx.beginPath();
           ctx.moveTo(-64, 0);
           ctx.quadraticCurveTo(-48, -68, 0, -70);
@@ -342,15 +412,15 @@ export function SurvivalCanvas({
           ctx.closePath();
           ctx.fill();
           ctx.stroke();
-          ctx.fillStyle = '#111a35';
+          ctx.fillStyle = '#36355c';
           ctx.fillRect(-13, -30, 26, 30);
           break;
         }
         case 'comms': {
-          ctx.fillStyle = '#9fb4dc';
+          ctx.fillStyle = '#eef2ff';
           ctx.fillRect(-3, -82, 6, 82);
-          ctx.strokeStyle = '#9fb4dc';
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = '#eef2ff';
+          ctx.lineWidth = 2.2;
           ctx.beginPath();
           ctx.moveTo(-18, 0);
           ctx.lineTo(0, -34);
@@ -359,14 +429,14 @@ export function SurvivalCanvas({
           ctx.save();
           ctx.translate(0, -86);
           ctx.rotate(-0.48);
-          ctx.fillStyle = '#dfe5f5';
+          ctx.fillStyle = '#ffffff';
           ctx.beginPath();
           ctx.arc(0, 0, 26, 0, Math.PI, false);
           ctx.closePath();
           ctx.fill();
-          ctx.fillStyle = st.failed ? '#ff727e' : '#35d9e8';
+          ctx.fillStyle = st.failed ? '#ff7b8a' : '#ff8ca2';
           ctx.beginPath();
-          ctx.arc(0, -18, 4, 0, Math.PI * 2);
+          ctx.arc(0, -18, 4.5, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
           break;
@@ -377,8 +447,8 @@ export function SurvivalCanvas({
 
       // Cracked X overlay when station FAILED
       if (st.failed) {
-        ctx.strokeStyle = '#ff727e';
-        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#ff6b7c';
+        ctx.lineWidth = 4.5;
         ctx.beginPath();
         ctx.moveTo(-16, -54);
         ctx.lineTo(16, -22);
@@ -387,28 +457,27 @@ export function SurvivalCanvas({
         ctx.stroke();
       }
 
-      // Health bar + Station label pill below building
-      ctx.fillStyle = 'rgba(12, 20, 44, 0.94)';
-      ctx.strokeStyle = col;
-      ctx.lineWidth = 1.8;
+      // Crisp cream nameplate + health bar below building
+      ctx.fillStyle = '#fffefa';
+      ctx.strokeStyle = st.failed ? '#ff7b8a' : '#ffffff';
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.roundRect(-62, 12, 124, 34, 10);
+      ctx.roundRect(-62, 12, 124, 34, 12);
       ctx.fill();
       ctx.stroke();
 
-      ctx.fillStyle = '#f5f7ff';
-      ctx.font = '700 12.5px "Outfit", sans-serif';
+      ctx.fillStyle = '#344270';
+      ctx.font = '800 12.5px "Outfit", sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
-      ctx.fillText(meta.label, 0, 16);
+      ctx.fillText(meta.label, 0, 15.5);
 
       if (st.failed) {
-        ctx.fillStyle = '#ff727e';
+        ctx.fillStyle = '#e04f64';
         ctx.font = '800 10.5px "JetBrains Mono", monospace';
-        ctx.fillText('FAILED', 0, 32);
+        ctx.fillText('OFFLINE', 0, 31.5);
       } else {
-        // Health bar track
-        ctx.fillStyle = '#1b284d';
+        ctx.fillStyle = '#e5eaf7';
         ctx.beginPath();
         ctx.roundRect(-48, 34, 68, 6, 3);
         ctx.fill();
@@ -418,34 +487,40 @@ export function SurvivalCanvas({
         ctx.fill();
 
         ctx.fillStyle = col;
-        ctx.font = '700 10.5px "JetBrains Mono", monospace';
+        ctx.font = '800 10.5px "JetBrains Mono", monospace';
         ctx.textAlign = 'right';
         ctx.fillText(`${pct}%`, 52, 31);
       }
 
-      // Floating "PRESS E / TAP!" prompt when near & ready
+      // Floating prompt or bouncing gold `!` target beacon
       if (isNear && !st.failed && st.cooldownSec <= 0) {
         const bounce = Math.sin(nowSec * 7) * 4;
-        ctx.fillStyle = '#ffc76b';
+        ctx.fillStyle = '#ffe184';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(-44, -124 + bounce, 88, 22, 10);
+        ctx.roundRect(-46, -124 + bounce, 92, 24, 12);
         ctx.fill();
-        ctx.fillStyle = '#080d1f';
-        ctx.font = '800 11px "Outfit", sans-serif';
+        ctx.stroke();
+        ctx.fillStyle = '#364272';
+        ctx.font = '800 11.5px "Outfit", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('OPEN [E]', 0, -113 + bounce);
-      } else if (!st.failed && pct < 45) {
-        const pulseA = 0.65 + Math.sin(nowSec * 8) * 0.35;
-        ctx.fillStyle = `rgba(255, 114, 126, ${pulseA})`;
+        ctx.fillText('OPEN [E]', 0, -112 + bounce);
+      } else if (!st.failed && (isPriorityTarget || pct < 48)) {
+        const bounce = Math.sin(nowSec * 5.2) * 5;
+        ctx.fillStyle = pct < 35 ? '#ff7b8a' : '#ffe184';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(0, -104, 11, 0, Math.PI * 2);
+        ctx.arc(0, -108 + bounce, 13, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = '#080d1f';
-        ctx.font = '800 14px "Outfit", sans-serif';
+        ctx.stroke();
+        ctx.fillStyle = pct < 35 ? '#ffffff' : '#5f4385';
+        ctx.font = '900 15px "Outfit", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('!', 0, -103);
+        ctx.fillText('!', 0, -107 + bounce);
       }
 
       ctx.restore();
@@ -455,11 +530,14 @@ export function SurvivalCanvas({
       const { x, y } = ROCKET_PAD_POS;
       ctx.save();
       ctx.translate(x, y);
-      ctx.fillStyle = '#334066';
+      ctx.fillStyle = '#a89fc7';
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.ellipse(0, 4, 34, 8, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#f5f7ff';
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
       ctx.beginPath();
       ctx.moveTo(0, -56);
       ctx.quadraticCurveTo(13, -32, 12, -2);
@@ -467,7 +545,7 @@ export function SurvivalCanvas({
       ctx.quadraticCurveTo(-13, -32, 0, -56);
       ctx.closePath();
       ctx.fill();
-      ctx.fillStyle = '#ff727e';
+      ctx.fillStyle = '#ff8ca2';
       ctx.beginPath();
       ctx.moveTo(0, -56);
       ctx.quadraticCurveTo(8, -42, 9, -34);
@@ -487,12 +565,12 @@ export function SurvivalCanvas({
       ctx.lineTo(10, -2);
       ctx.closePath();
       ctx.fill();
-      ctx.fillStyle = '#35d9e8';
+      ctx.fillStyle = '#a8e3fa';
       ctx.beginPath();
       ctx.arc(0, -24, 5, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#abb8d5';
-      ctx.font = '700 10px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#fffefa';
+      ctx.font = '800 10px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
       ctx.fillText('ESCAPE SHIP', 0, 20);
       ctx.restore();
@@ -512,55 +590,59 @@ export function SurvivalCanvas({
       const nowSec = now / 1000;
       const w = worldRef.current;
 
-      // Sky gradient
+      // Lavender-dusk sky gradient from storybook Moon palette
       const sky = ctx.createLinearGradient(0, 0, 0, WORLD_HEIGHT);
-      sky.addColorStop(0, '#070b1b');
-      sky.addColorStop(0.55, '#111a35');
-      sky.addColorStop(1, '#18203d');
+      sky.addColorStop(0, '#594e86');
+      sky.addColorStop(0.55, '#7e709e');
+      sky.addColorStop(1, '#56628f');
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 
-      // Stars
-      for (let i = 0; i < 58; i++) {
+      // Gentle stars
+      for (let i = 0; i < 42; i++) {
         const sx = (i * 173) % WORLD_WIDTH;
-        const sy = (i * 97) % 230;
-        ctx.fillStyle = `rgba(245, 247, 255, ${0.32 + (i % 5) * 0.14})`;
+        const sy = (i * 97) % 210;
+        ctx.fillStyle = `rgba(255, 249, 224, ${0.42 + (i % 5) * 0.1})`;
         ctx.beginPath();
-        ctx.arc(sx, sy, (i % 3) * 0.45 + 0.7, 0, Math.PI * 2);
+        ctx.arc(sx, sy, (i % 3) * 0.55 + 0.9, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Low Sun Glow
-      const sunGrad = ctx.createRadialGradient(45, 240, 10, 45, 240, 260);
-      sunGrad.addColorStop(0, w.stations.solar.failed ? 'rgba(255, 199, 107, 0.15)' : 'rgba(255, 199, 107, 0.42)');
-      sunGrad.addColorStop(1, 'rgba(255, 199, 107, 0)');
+      // Warm sun glow on horizon
+      const sunGrad = ctx.createRadialGradient(45, 230, 10, 45, 230, 250);
+      sunGrad.addColorStop(0, w.stations.solar.failed ? 'rgba(255, 210, 130, 0.2)' : 'rgba(255, 230, 148, 0.45)');
+      sunGrad.addColorStop(1, 'rgba(255, 230, 148, 0)');
       ctx.fillStyle = sunGrad;
-      ctx.fillRect(0, 0, 400, 360);
+      ctx.fillRect(0, 0, 380, 340);
 
-      // Earth in Center Sky
+      // Earth in center sky
       ctx.save();
-      ctx.translate(495, 84 + Math.sin(nowSec * 0.8) * 3);
-      ctx.fillStyle = '#2563eb';
+      ctx.translate(495, 82 + Math.sin(nowSec * 0.8) * 3);
+      ctx.fillStyle = '#4890f5';
+      ctx.strokeStyle = 'rgba(255,255,255,0.65)';
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(0, 0, 30, 0, Math.PI * 2);
+      ctx.arc(0, 0, 28, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#35d2a0';
+      ctx.stroke();
+      ctx.fillStyle = '#76dbae';
       ctx.beginPath();
-      ctx.ellipse(-9, -6, 11, 7, -0.3, 0, Math.PI * 2);
-      ctx.ellipse(10, 7, 9, 5, 0.4, 0, Math.PI * 2);
+      ctx.ellipse(-9, -6, 10, 6.5, -0.3, 0, Math.PI * 2);
+      ctx.ellipse(9, 7, 8, 5, 0.4, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#abb8d5';
-      ctx.font = '700 10.5px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#fffefa';
+      ctx.font = '800 10.5px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('EARTH', 0, 43);
+      ctx.fillText('EARTH', 0, 41);
       ctx.restore();
 
       // Active storm waves
       if (w.storm.active) {
-        ctx.fillStyle = 'rgba(255, 114, 126, 0.08)';
+        ctx.fillStyle = 'rgba(255, 123, 138, 0.14)';
         ctx.fillRect(0, 0, WORLD_WIDTH, 280);
-        ctx.strokeStyle = w.storm.kind === 'meteor_shower' ? 'rgba(255, 114, 126, 0.45)' : 'rgba(255, 199, 107, 0.4)';
-        ctx.lineWidth = 2.5;
+        ctx.strokeStyle =
+          w.storm.kind === 'meteor_shower' ? 'rgba(255, 130, 146, 0.65)' : 'rgba(255, 224, 130, 0.65)';
+        ctx.lineWidth = 3;
         ctx.setLineDash([12, 10]);
         for (let r = 0; r < 3; r++) {
           const offset = (nowSec * 90 + r * 40) % 120;
@@ -572,8 +654,8 @@ export function SurvivalCanvas({
         ctx.setLineDash([]);
       }
 
-      // Crater ridges & lunar terrain
-      ctx.fillStyle = '#222a47';
+      // Lunar ridge silhouette + lavender regolith ground
+      ctx.fillStyle = '#6c6293';
       ctx.beginPath();
       ctx.moveTo(0, 240);
       ctx.lineTo(130, 205);
@@ -588,12 +670,13 @@ export function SurvivalCanvas({
       ctx.closePath();
       ctx.fill();
 
-      const gGrad = ctx.createLinearGradient(0, 230, 0, WORLD_HEIGHT);
-      gGrad.addColorStop(0, '#364163');
-      gGrad.addColorStop(1, '#192241');
+      const gGrad = ctx.createLinearGradient(0, 225, 0, WORLD_HEIGHT);
+      gGrad.addColorStop(0, '#9689b8');
+      gGrad.addColorStop(0.6, '#7a75a6');
+      gGrad.addColorStop(1, '#5b6392');
       ctx.fillStyle = gGrad;
       ctx.beginPath();
-      ctx.moveTo(0, 250);
+      ctx.moveTo(0, 248);
       ctx.quadraticCurveTo(320, 224, 650, 248);
       ctx.quadraticCurveTo(860, 236, 1000, 250);
       ctx.lineTo(1000, WORLD_HEIGHT);
@@ -601,7 +684,15 @@ export function SurvivalCanvas({
       ctx.closePath();
       ctx.fill();
 
-      // Power/Water paths connecting Habitat hub
+      // Soft storybook craters on lunar floor
+      ctx.fillStyle = 'rgba(208, 195, 225, 0.35)';
+      ctx.beginPath();
+      ctx.ellipse(210, 488, 65, 16, 0, 0, Math.PI * 2);
+      ctx.ellipse(760, 495, 58, 15, 0, 0, Math.PI * 2);
+      ctx.ellipse(495, 285, 42, 11, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Rounded moonbase walkways connecting Habitat hub
       const cables: [ModuleId, ModuleId][] = [
         ['solar', 'habitat'],
         ['greenhouse', 'habitat'],
@@ -609,14 +700,22 @@ export function SurvivalCanvas({
         ['shelter', 'habitat'],
         ['comms', 'shelter'],
       ];
+      ctx.lineCap = 'round';
       for (const [a, b] of cables) {
         const failedCable = w.stations[a].failed || w.stations[b].failed;
-        ctx.strokeStyle = failedCable ? 'rgba(255, 114, 126, 0.25)' : 'rgba(53, 217, 232, 0.45)';
-        ctx.lineWidth = 2.4;
-        ctx.setLineDash([6, 7]);
+        ctx.strokeStyle = failedCable ? 'rgba(255, 123, 138, 0.35)' : 'rgba(68, 72, 104, 0.72)';
+        ctx.lineWidth = 14;
         ctx.beginPath();
-        ctx.moveTo(STATIONS[a].pos.x, STATIONS[a].pos.y);
-        ctx.lineTo(STATIONS[b].pos.x, STATIONS[b].pos.y);
+        ctx.moveTo(STATIONS[a].pos.x, STATIONS[a].pos.y + 4);
+        ctx.lineTo(STATIONS[b].pos.x, STATIONS[b].pos.y + 4);
+        ctx.stroke();
+
+        ctx.strokeStyle = failedCable ? 'rgba(255, 180, 190, 0.55)' : 'rgba(232, 236, 255, 0.65)';
+        ctx.lineWidth = 2.6;
+        ctx.setLineDash([8, 8]);
+        ctx.beginPath();
+        ctx.moveTo(STATIONS[a].pos.x, STATIONS[a].pos.y + 4);
+        ctx.lineTo(STATIONS[b].pos.x, STATIONS[b].pos.y + 4);
         ctx.stroke();
       }
       ctx.setLineDash([]);
@@ -624,18 +723,28 @@ export function SurvivalCanvas({
       // Click-to-walk target indicator
       if (w.player.target) {
         const pulseR = 10 + Math.sin(nowSec * 8) * 3;
-        ctx.strokeStyle = '#35d9e8';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#ffe184';
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
         ctx.ellipse(w.player.target.x, w.player.target.y, pulseR, pulseR * 0.45, 0, 0, Math.PI * 2);
         ctx.stroke();
       }
 
-      // Draw Escape Rocket & 6 Stations
+      // Find the lowest-health ready station so we can highlight it with a gold beacon
+      let priorityId: ModuleId | null = null;
+      let lowestHp = 78;
+      for (const id of STATION_ORDER) {
+        const st = w.stations[id];
+        if (!st.failed && st.cooldownSec <= 0 && st.health < lowestHp) {
+          lowestHp = st.health;
+          priorityId = id;
+        }
+      }
+
       drawEscapeRocket();
       for (const id of STATION_ORDER) {
         const near = distanceBetween(w.player, STATIONS[id].interactPos) <= INTERACT_RADIUS;
-        drawStation(w, id, nowSec, near);
+        drawStation(w, id, nowSec, near, id === priorityId);
       }
 
       // Particle spawn for walking footsteps & NPC wrench sparks
@@ -643,10 +752,10 @@ export function SurvivalCanvas({
       if (stepTimer > 0.14) {
         stepTimer = 0;
         if (Math.hypot(w.player.vx, w.player.vy) > 20) {
-          spawnParticle(w.player.x, w.player.y + 2, -w.player.vx * 0.08, -14, 'rgba(171,184,213,0.6)', 2.4, 0.45);
+          spawnParticle(w.player.x, w.player.y + 2, -w.player.vx * 0.08, -14, 'rgba(255,244,216,0.65)', 2.4, 0.45);
         }
         if (Math.hypot(w.npc.vx, w.npc.vy) > 20) {
-          spawnParticle(w.npc.x, w.npc.y + 2, -w.npc.vx * 0.08, -12, 'rgba(171,184,213,0.45)', 2.2, 0.4);
+          spawnParticle(w.npc.x, w.npc.y + 2, -w.npc.vx * 0.08, -12, 'rgba(255,244,216,0.5)', 2.2, 0.4);
         }
       }
       sparkTimer += rawDt;
@@ -657,13 +766,12 @@ export function SurvivalCanvas({
           w.npc.y - 20,
           (Math.random() - 0.5) * 45,
           -20 - Math.random() * 25,
-          '#ffc76b',
+          '#ffe184',
           2.6,
           0.4,
         );
       }
 
-      // Update & draw pooled particles
       for (const p of pool) {
         if (!p.active) continue;
         p.life -= rawDt;
@@ -680,6 +788,8 @@ export function SurvivalCanvas({
         ctx.fill();
       }
       ctx.globalAlpha = 1;
+
+      const npcThought = STATION_PAD_COLORS[w.npc.targetStation].emoji;
 
       // Y-sort NPC & Player so foreground actor overlaps naturally
       const actors = [
@@ -698,6 +808,7 @@ export function SurvivalCanvas({
               `${w.npc.profile.shortName} (NPC)`,
               w.npc.taskPhase === 'working',
               w.crewHealth,
+              npcThought,
             ),
         },
         {
@@ -740,7 +851,6 @@ export function SurvivalCanvas({
     const worldX = ((e.clientX - rect.left) / rect.width) * WORLD_WIDTH;
     const worldY = ((e.clientY - rect.top) / rect.height) * WORLD_HEIGHT;
 
-    // Check if player tapped/clicked on a station building directly
     for (const id of STATION_ORDER) {
       const stPos = STATIONS[id].pos;
       if (Math.abs(worldX - stPos.x) <= 72 && worldY >= stPos.y - 108 && worldY <= stPos.y + 46) {
@@ -758,7 +868,7 @@ export function SurvivalCanvas({
   };
 
   return (
-    <div ref={containerRef} className="relative flex h-full w-full items-center justify-center overflow-hidden bg-[#070b1b]">
+    <div ref={containerRef} className="relative flex h-full w-full items-center justify-center overflow-hidden bg-[#594e86]">
       <canvas
         ref={canvasRef}
         width={WORLD_WIDTH}

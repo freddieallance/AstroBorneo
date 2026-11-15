@@ -36,9 +36,9 @@ export default function Briefing() {
   return (
     <div className="space-y-6">
       <div className="rise">
-        <p className="hud-label">Mission Briefing · Classified: Junior Commanders Only</p>
-        <h1 className="mt-2 text-4xl font-bold md:text-6xl">Operation <span className="text-aqua">Lunar Dawn</span></h1>
-        <p className="mt-3 max-w-3xl text-lg text-dim">
+        <p className="hud-label !text-[#ffe49e]">Mission Briefing · Classified: Junior Commanders Only</p>
+        <h1 className="mt-2 text-4xl font-bold text-white md:text-6xl">Operation <span className="text-[#ffe49e]">Lunar Dawn</span></h1>
+        <p className="mt-3 max-w-3xl text-lg text-[#dce4ff]">
           You command a fictional research outpost near the Moon's south polar region. The Sun skims the horizon here, the nights can be long, and every watt counts.
         </p>
       </div>
@@ -91,7 +91,7 @@ export default function Briefing() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="button-cancel-new">Keep current mission</AlertDialogCancel>
-            <AlertDialogAction onClick={begin} className="bg-bad text-deep hover:bg-bad/90" data-testid="button-confirm-new">Start new mission</AlertDialogAction>
+            <AlertDialogAction onClick={begin} className="bg-bad text-white hover:bg-bad/90" data-testid="button-confirm-new">Start new mission</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

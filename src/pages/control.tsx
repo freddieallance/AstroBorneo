@@ -32,8 +32,8 @@ export default function Control() {
   if (game.status !== 'active') {
     return (
       <div className="mx-auto max-w-lg py-20 text-center">
-        <p className="hud-label">Mission ended</p>
-        <h1 className="mt-2 text-3xl font-bold">{game.status === 'success' ? 'All five cycles complete' : 'The mission needs revision'}</h1>
+        <p className="hud-label !text-[#ffe49e]">Mission ended</p>
+        <h1 className="mt-2 text-3xl font-bold text-white">{game.status === 'success' ? 'All five cycles complete' : 'The mission needs revision'}</h1>
         <div className="mt-6 flex justify-center gap-3">
           <Link href="/results" className={btn.primary} data-testid="link-results">View results</Link>
           <Link href="/briefing" className={btn.ghost} data-testid="link-new-mission">New mission</Link>
@@ -67,16 +67,16 @@ export default function Control() {
       {/* header strip */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="hud-label">Mission Control · Operation Lunar Dawn</p>
-          <h1 className="text-3xl font-bold md:text-4xl">Cycle {game.cycle} <span className="text-dim">of 5</span></h1>
+          <p className="hud-label !text-[#ffe49e]">Mission Control · Operation Lunar Dawn</p>
+          <h1 className="text-3xl font-bold text-white md:text-4xl">Cycle {game.cycle} <span className="text-[#c8d3f7]">of 5</span></h1>
           <div className="mt-3 flex gap-1.5" aria-label={`Mission progress: ${game.completedCycles} of 5 cycles complete`} data-testid="progress-mission">
             {[1, 2, 3, 4, 5].map((c) => (
-              <span key={c} className={cn('h-2 w-12 rounded-full', c <= game.completedCycles ? 'bg-ok' : c === game.cycle ? 'bg-aqua animate-pulse' : 'bg-plate')} />
+              <span key={c} className={cn('h-2 w-12 rounded-full', c <= game.completedCycles ? 'bg-ok' : c === game.cycle ? 'bg-[#ffe49e] animate-pulse' : 'bg-white/25')} />
             ))}
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full border border-warn/40 bg-warn/10 px-3 py-1.5 font-mono text-xs text-warn" data-testid="text-data-mode">DATA: {CURRENT_DATA_MODE}</span>
+          <span className="rounded-full border border-[#ffdca6] bg-[#fff8e8] px-3 py-1.5 font-mono text-xs font-bold text-[#b86b0d]" data-testid="text-data-mode">DATA: {CURRENT_DATA_MODE}</span>
           <Link href="/base" className={btn.ghost} data-testid="link-base">View base</Link>
           <button className={btn.danger} onClick={() => setRestart(true)} data-testid="button-restart"><RotateCcw className="h-4 w-4" /> Restart</button>
         </div>
@@ -288,7 +288,7 @@ export default function Control() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="button-cancel-restart">Keep playing</AlertDialogCancel>
-            <AlertDialogAction className="bg-bad text-deep hover:bg-bad/90" onClick={() => { abandon(); startNew(); }} data-testid="button-confirm-restart">Restart</AlertDialogAction>
+            <AlertDialogAction className="bg-bad text-white hover:bg-bad/90" onClick={() => { abandon(); startNew(); }} data-testid="button-confirm-restart">Restart</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

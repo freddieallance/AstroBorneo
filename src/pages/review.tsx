@@ -15,7 +15,7 @@ export default function Review() {
   if (!rv) {
     return (
       <div className="py-20 text-center">
-        <h1 className="text-3xl font-bold">No cycle to review yet</h1>
+        <h1 className="text-3xl font-bold text-white">No cycle to review yet</h1>
         <button className={`${btn.primary} mt-6`} onClick={() => go('/control')} data-testid="button-go-control">Go to Mission Control</button>
       </div>
     );
@@ -26,9 +26,9 @@ export default function Review() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="rise">
-        <p className="hud-label">Decision Review · Cycle {rv.cycle} complete</p>
-        <h1 className="text-3xl font-bold md:text-4xl">What happened at the outpost</h1>
-        <p className="mt-1 text-dim">{ev.title} · {MODES[rv.decision.mode].label} mode · {EVENT_LABEL[rv.decision.event]}</p>
+        <p className="hud-label !text-[#ffe49e]">Decision Review · Cycle {rv.cycle} complete</p>
+        <h1 className="text-3xl font-bold text-white md:text-4xl">What happened at the outpost</h1>
+        <p className="mt-1 text-[#dce4ff]">{ev.title} · {MODES[rv.decision.mode].label} mode · {EVENT_LABEL[rv.decision.event]}</p>
       </div>
       <Panel kicker="Before and after" title="Resource changes">
         <div className="space-y-3" data-testid="table-review">

@@ -48,7 +48,14 @@ import { scoreSummary } from '@/game/scoring';
 import { CSA_LINKS, EVENT_LABEL, MODULES, MODES, RESOURCE_META, SOURCES, SYSTEMS, type ModuleId, type ResourceKey } from '@/content/mission';
 import { QUIZ, QUIZ_VISUAL_META } from '@/content/quiz';
 import { buildLearningReflection, quizCorrect } from '@/lib/records';
-import { speakText, stopSpeech } from '@/lib/speech';
+import {
+  CUTE_VOICE_STYLES,
+  loadVoiceStylePref,
+  saveVoiceStylePref,
+  speakText,
+  stopSpeech,
+  type CuteVoiceStyle,
+} from '@/lib/speech';
 import { getProviderStatuses } from '@/services/nasa';
 import { btn, Delta, ErrorNote, tone } from '@/components/kit';
 import { Switch } from '@/components/ui/switch';
@@ -160,12 +167,12 @@ function PowerShortVisual({ deficit }: { deficit: number }) {
 
 function PopupSceneIllustration({ id, mode, active = true }: { id: ModuleId; mode?: string; active?: boolean }) {
   return (
-    <svg viewBox="0 0 280 76" className="h-16 w-full rounded-xl border border-dim/15 bg-deep/80" aria-hidden>
-      <rect width="280" height="76" fill="#080d1f" />
-      <circle cx="32" cy="18" r="1.2" fill="#f5f7ff" opacity="0.7" />
-      <circle cx="88" cy="12" r="1" fill="#f5f7ff" opacity="0.5" />
-      <circle cx="235" cy="20" r="14" fill="#4f8cff" opacity="0.35" />
-      <path d="M0 58 Q140 48 280 58 V76 H0 Z" fill="#222a47" />
+    <svg viewBox="0 0 280 76" className="h-16 w-full rounded-xl border border-[#dfe5fa] bg-[#52497e]" aria-hidden>
+      <rect width="280" height="76" fill="#52497e" />
+      <circle cx="32" cy="18" r="1.2" fill="#fffefa" opacity="0.75" />
+      <circle cx="88" cy="12" r="1" fill="#fffefa" opacity="0.55" />
+      <circle cx="235" cy="20" r="14" fill="#4f8cff" opacity="0.4" />
+      <path d="M0 58 Q140 48 280 58 V76 H0 Z" fill="#cfc6e2" />
       {id === 'habitat' && (
         <g transform="translate(140 54)">
           <rect x="-46" y="-26" width="92" height="26" rx="13" fill="#c9d1e6" />
@@ -502,7 +509,7 @@ export function ModuleControlDialog({
                 <span
                   className={cn(
                     'grid h-12 w-14 shrink-0 place-items-center rounded-xl font-display text-lg font-extrabold',
-                    checked ? 'bg-ok text-deep' : 'bg-plate text-dim',
+                    checked ? 'bg-ok text-white' : 'bg-plate text-dim',
                   )}
                 >
                   {checked ? 'ON' : 'OFF'}
@@ -546,7 +553,7 @@ export function ModuleControlDialog({
                   onClose();
                   onOpenEvent();
                 }}
-                className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl border-b-4 border-[#b87b14] bg-warn px-5 py-3 font-display text-base font-extrabold text-deep transition hover:brightness-110 active:translate-y-0.5"
+                className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl border-b-4 border-[#e7a959] bg-[#ffca6b] px-5 py-3 font-display text-base font-extrabold text-[#222a5b] transition hover:brightness-105 active:translate-y-0.5"
                 data-testid="button-module-fix-event"
               >
                 <AlertTriangle className="h-5 w-5" /> Fix Day {vm.cycle} Problem!
@@ -583,7 +590,7 @@ export function ModuleControlDialog({
                   onClose();
                   onOpenEvent();
                 }}
-                className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl border-b-4 border-[#b87b14] bg-warn px-5 py-3 font-display text-base font-extrabold text-deep transition hover:brightness-110 active:translate-y-0.5"
+                className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl border-b-4 border-[#e7a959] bg-[#ffca6b] px-5 py-3 font-display text-base font-extrabold text-[#222a5b] transition hover:brightness-105 active:translate-y-0.5"
                 data-testid="button-solar-event"
               >
                 <BatteryCharging className="h-5 w-5" /> Use or Save Battery? (Tap Here!)
@@ -615,7 +622,7 @@ export function ModuleControlDialog({
                   onClose();
                   onOpenEvent();
                 }}
-                className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl border-b-4 border-[#b87b14] bg-warn px-5 py-3 font-display text-base font-extrabold text-deep transition hover:brightness-110 active:translate-y-0.5"
+                className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl border-b-4 border-[#e7a959] bg-[#ffca6b] px-5 py-3 font-display text-base font-extrabold text-[#222a5b] transition hover:brightness-105 active:translate-y-0.5"
                 data-testid="button-shelter-event"
               >
                 <Shield className="h-5 w-5" /> Protect Crew! (Space Storm)
@@ -629,7 +636,7 @@ export function ModuleControlDialog({
   return (
     <Dialog open={!!id} onOpenChange={(o) => !o && onClose()}>
       <DialogContent
-        overlayClassName="bg-[#070b1b]/80"
+        overlayClassName="bg-[#14193f]/72"
         className="max-h-[90dvh] max-w-lg overflow-y-auto border-aqua/35 bg-hull text-ink"
         data-testid="dialog-module-control"
       >
@@ -865,7 +872,7 @@ export function CycleDecisionDialog({
   return (
     <Dialog open={open} onOpenChange={(o) => !running && onOpenChange(o)}>
       <DialogContent
-        overlayClassName="bg-[#070b1b]/80"
+        overlayClassName="bg-[#14193f]/72"
         className="flex max-h-[92dvh] max-w-2xl flex-col gap-3 overflow-hidden border-aqua/40 bg-hull p-4 text-ink shadow-2xl sm:p-6"
         data-testid="dialog-cycle-decision"
         onEscapeKeyDown={(e) => running && e.preventDefault()}
@@ -1065,7 +1072,7 @@ export function CycleDecisionDialog({
                       )}
                     >
                       {isSelected && (
-                        <span className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full bg-ok text-deep">
+                        <span className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full bg-ok text-white">
                           <CheckCircle2 className="h-4 w-4" aria-hidden />
                         </span>
                       )}
@@ -1311,7 +1318,7 @@ export function CycleDecisionDialog({
                       }
                       setFixAppliedNote(powerFix.label);
                     }}
-                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-2xl border-2 border-b-4 border-[#189ab4] bg-aqua px-4 py-2.5 font-display text-base font-extrabold text-deep shadow-lg transition hover:brightness-110 active:translate-y-0.5"
+                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-2xl border-2 border-b-4 border-[#1864a3] bg-aqua px-4 py-2.5 font-display text-base font-extrabold text-white shadow-lg transition hover:brightness-110 active:translate-y-0.5"
                     data-testid="button-autofix-power"
                   >
                     <Zap className="h-5 w-5" aria-hidden /> Fix Power For Me! ({powerFix.label})
@@ -1431,7 +1438,7 @@ export function CycleReactionDialog({
   return (
     <Dialog open={!!record} onOpenChange={(o) => !o && onContinue()}>
       <DialogContent
-        overlayClassName="bg-[#070b1b]/80"
+        overlayClassName="bg-[#14193f]/72"
         className={cn(
           'max-h-[90dvh] max-w-lg overflow-y-auto bg-hull text-ink shadow-2xl',
           gameStatus === 'failed' ? 'border-bad/55' : 'border-ok/50',
@@ -1590,7 +1597,7 @@ export function MissionOutcomeDialog({
     <>
       <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
         <DialogContent
-          overlayClassName="bg-[#070b1b]/80"
+          overlayClassName="bg-[#14193f]/72"
           className="max-h-[90dvh] max-w-2xl overflow-y-auto border-aqua/35 bg-hull p-4 text-ink shadow-2xl sm:p-5"
           data-testid="dialog-mission-outcome"
           onEscapeKeyDown={(e) => {
@@ -1734,6 +1741,7 @@ export function PauseDialog({
 }) {
   const [confirmRestart, setConfirmRestart] = useState(false);
   const [confirmTeacher, setConfirmTeacher] = useState(false);
+  const [voiceStyle, setVoiceStyle] = useState<CuteVoiceStyle>(loadVoiceStylePref);
   const [, go] = useLocation();
 
   return (
@@ -1754,11 +1762,34 @@ export function PauseDialog({
             <div className="space-y-2 rounded-xl border border-dim/20 bg-deep/55 p-3">
               <p className="hud-label">Accessibility &amp; Teacher Settings</p>
               {speechAvailable && (
-                <div className="flex items-center justify-between gap-3 py-1">
-                  <label htmlFor="sw-menu-sound" className="flex items-center gap-2 text-sm font-semibold text-ink">
-                    <Volume2 className="h-4 w-4 text-aqua" /> Read-Aloud Voice
-                  </label>
-                  <Switch id="sw-menu-sound" checked={soundOn} onCheckedChange={onToggleSound} data-testid="switch-menu-sound" />
+                <div className="space-y-2 py-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <label htmlFor="sw-menu-sound" className="flex items-center gap-2 text-sm font-semibold text-ink">
+                      <Volume2 className="h-4 w-4 text-aqua" /> Read-Aloud Voice
+                    </label>
+                    <Switch id="sw-menu-sound" checked={soundOn} onCheckedChange={onToggleSound} data-testid="switch-menu-sound" />
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5" role="group" aria-label="Read voice style">
+                    {CUTE_VOICE_STYLES.map((opt) => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => {
+                          setVoiceStyle(opt.id);
+                          saveVoiceStylePref(opt.id);
+                          speakText(`Hi! This is the ${opt.label} voice!`, true, { style: opt.id });
+                        }}
+                        className={cn(
+                          'rounded-lg border px-2 py-1 text-center text-xs font-bold transition',
+                          voiceStyle === opt.id
+                            ? 'border-[#ffbf66] bg-[#fff5e0] text-[#222a5b]'
+                            : 'border-dim/20 bg-white text-dim hover:border-[#b4a0ef]',
+                        )}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
               <div className="flex items-center justify-between gap-3 py-1">
@@ -1828,7 +1859,7 @@ export function PauseDialog({
           <AlertDialogFooter>
             <AlertDialogCancel>Keep Playing</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-bad text-deep hover:bg-bad/90"
+              className="bg-bad text-white hover:bg-bad/90"
               onClick={() => {
                 setConfirmRestart(false);
                 onOpenChange(false);
@@ -1853,7 +1884,7 @@ export function PauseDialog({
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="button-cancel-open-teacher">Stay on Moon Base</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-aqua text-deep hover:bg-aqua/90"
+              className="bg-aqua text-white hover:bg-aqua/90"
               onClick={() => {
                 setConfirmTeacher(false);
                 onOpenChange(false);

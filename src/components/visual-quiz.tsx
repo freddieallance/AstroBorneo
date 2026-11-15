@@ -25,15 +25,15 @@ export function VisualQuizScene({ questionId }: { questionId: string }) {
   return (
     <svg
       viewBox="0 0 360 118"
-      className="h-24 w-full rounded-2xl border border-aqua/25 bg-[#080d1f] sm:h-28"
+      className="h-24 w-full rounded-2xl border border-[#dfe5fa] bg-[#52497e] sm:h-28"
       role="img"
       aria-label={QUIZ_VISUAL_META[questionId]?.spokenPrompt ?? 'Mission science visual'}
     >
-      <rect width="360" height="118" fill="#080d1f" />
-      <circle cx="28" cy="18" r="1.3" fill="#f5f7ff" opacity="0.65" />
-      <circle cx="96" cy="12" r="1" fill="#f5f7ff" opacity="0.45" />
-      <circle cx="242" cy="16" r="1.2" fill="#f5f7ff" opacity="0.55" />
-      <path d="M0 98 Q180 86 360 98 V118 H0 Z" fill="#1b2442" />
+      <rect width="360" height="118" fill="#52497e" />
+      <circle cx="28" cy="18" r="1.3" fill="#fffefa" opacity="0.7" />
+      <circle cx="96" cy="12" r="1" fill="#fffefa" opacity="0.55" />
+      <circle cx="242" cy="16" r="1.2" fill="#fffefa" opacity="0.65" />
+      <path d="M0 98 Q180 86 360 98 V118 H0 Z" fill="#cfc6e2" />
 
       {questionId === 'air' && (
         <g>
@@ -158,7 +158,7 @@ export function VisualQuizScene({ questionId }: { questionId: string }) {
  */
 export function ChoiceVisualDiagram({ questionId, choiceIndex }: { questionId: string; choiceIndex: number }) {
   return (
-    <svg viewBox="0 0 120 68" className="h-16 w-full rounded-xl bg-[#070c1c]" aria-hidden>
+    <svg viewBox="0 0 120 68" className="h-16 w-full rounded-xl bg-[#252d66]" aria-hidden>
       {questionId === 'air' && choiceIndex === 0 && (
         <g transform="translate(60 36)">
           <rect x="-32" y="-14" width="22" height="28" rx="4" fill="#173832" stroke="#35d2a0" strokeWidth="1.8" />

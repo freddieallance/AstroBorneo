@@ -16,9 +16,9 @@ export default function History() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="hud-label">Mission History</p>
-          <h1 className="text-3xl font-bold md:text-4xl">Past attempts on this device</h1>
-          <p className="text-dim">Scores here exclude the quiz.</p>
+          <p className="hud-label !text-[#ffe49e]">Mission History</p>
+          <h1 className="text-3xl font-bold text-white md:text-4xl">Past attempts on this device</h1>
+          <p className="text-[#dce4ff]">Scores here exclude the quiz.</p>
         </div>
         {list.length > 0 && <button className={btn.danger} onClick={() => setConfirm(true)} data-testid="button-clear-history"><Trash2 className="h-4 w-4" /> Clear history</button>}
       </div>
@@ -49,7 +49,7 @@ export default function History() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="button-cancel-clear">Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-bad text-deep hover:bg-bad/90" onClick={clear} data-testid="button-confirm-clear">Clear</AlertDialogAction>
+            <AlertDialogAction className="bg-bad text-white hover:bg-bad/90" onClick={clear} data-testid="button-confirm-clear">Clear</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

@@ -135,7 +135,7 @@ export function ModuleVisualLesson(props: ModuleVisualLessonProps) {
       {/* Picture-first SVG flow diagram: object -> resource used -> resource produced */}
       <svg
         viewBox="0 0 360 104"
-        className="h-24 w-full rounded-xl border border-dim/15 bg-[#080d1f]"
+        className="h-24 w-full rounded-xl border border-[#dfe5fa] bg-[#252d66]"
         role="img"
         aria-label={meta.alt}
       >
@@ -509,7 +509,7 @@ export function CycleCauseEffectVisual({ record, failed = false, onSpeak }: Cycl
         </button>
       </div>
 
-      <svg viewBox="0 0 360 88" className="h-[88px] w-full rounded-xl border border-dim/15 bg-[#080d1f]" role="img" aria-label={info.alt}>
+      <svg viewBox="0 0 360 88" className="h-[88px] w-full rounded-xl border border-[#dfe5fa] bg-[#252d66]" role="img" aria-label={info.alt}>
         <defs>
           <marker id="ce-arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto">
             <path d="M 0 1 L 10 5 L 0 9 z" fill={failed ? '#ff727e' : '#35d2a0'} />

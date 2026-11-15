@@ -70,63 +70,63 @@ function SimVsNasaDiagram() {
   return (
     <svg
       viewBox="0 0 720 190"
-      className="w-full rounded-2xl border border-dim/20 bg-deep/80"
+      className="w-full rounded-2xl border border-[#dfe5fa] bg-[#252d66]"
       role="img"
       aria-label="Diagram showing AstroBorneo simulated resource rules separate from verified NASA DONKI observations"
     >
-      <rect width="720" height="190" fill="#080d1f" />
+      <rect width="720" height="190" fill="#252d66" />
       {/* Left box: Simulated Educational Engine */}
-      <rect x="20" y="20" width="280" height="150" rx="14" fill="#111a35" stroke="#35d9e8" strokeWidth="1.8" />
-      <text x="160" y="45" textAnchor="middle" fill="#35d9e8" fontSize="12" fontFamily="JetBrains Mono" fontWeight="700">
+      <rect x="20" y="20" width="280" height="150" rx="14" fill="#fffefa" stroke="#ffca6b" strokeWidth="2.2" />
+      <text x="160" y="45" textAnchor="middle" fill="#b86b0d" fontSize="12" fontFamily="JetBrains Mono" fontWeight="700">
         SIMULATED_SCENARIO
       </text>
-      <text x="160" y="68" textAnchor="middle" fill="#f5f7ff" fontSize="13" fontFamily="Space Grotesk" fontWeight="700">
+      <text x="160" y="68" textAnchor="middle" fill="#222a5b" fontSize="13" fontFamily="Outfit" fontWeight="800">
         Game Rules &amp; 0–100 Units
       </text>
-      <text x="160" y="92" textAnchor="middle" fill="#abb8d5" fontSize="11" fontFamily="Atkinson Hyperlegible">
+      <text x="160" y="92" textAnchor="middle" fill="#4e5b8a" fontSize="11" fontFamily="Plus Jakarta Sans">
         • Fixed Cycles 1–5 Solar (+24, +8, +22, +14, +20)
       </text>
-      <text x="160" y="112" textAnchor="middle" fill="#abb8d5" fontSize="11" fontFamily="Atkinson Hyperlegible">
+      <text x="160" y="112" textAnchor="middle" fill="#4e5b8a" fontSize="11" fontFamily="Plus Jakarta Sans">
         • Deterministic Engine (src/game/engine.ts)
       </text>
-      <text x="160" y="132" textAnchor="middle" fill="#abb8d5" fontSize="11" fontFamily="Atkinson Hyperlegible">
+      <text x="160" y="132" textAnchor="middle" fill="#4e5b8a" fontSize="11" fontFamily="Plus Jakarta Sans">
         • Simplified C4 Radiation Safety Tiers (-2/-5/-15)
       </text>
-      <text x="160" y="155" textAnchor="middle" fill="#35d2a0" fontSize="10.5" fontFamily="JetBrains Mono">
+      <text x="160" y="155" textAnchor="middle" fill="#1b7c54" fontSize="10.5" fontWeight="700" fontFamily="JetBrains Mono">
         Controls Base Gauges &amp; Score
       </text>
 
       {/* Center separation barrier */}
-      <line x1="360" y1="22" x2="360" y2="168" stroke="#ffc76b" strokeWidth="2.5" strokeDasharray="6 5" />
-      <rect x="308" y="64" width="104" height="58" rx="10" fill="#192647" stroke="#ffc76b" strokeWidth="1.6" />
-      <text x="360" y="88" textAnchor="middle" fill="#ffc76b" fontSize="10.5" fontFamily="JetBrains Mono" fontWeight="700">
+      <line x1="360" y1="22" x2="360" y2="168" stroke="#ffe49e" strokeWidth="2.5" strokeDasharray="6 5" />
+      <rect x="308" y="64" width="104" height="58" rx="10" fill="#ffe7a1" stroke="#e7a959" strokeWidth="2" />
+      <text x="360" y="88" textAnchor="middle" fill="#364272" fontSize="10.5" fontFamily="JetBrains Mono" fontWeight="700">
         STRICT
       </text>
-      <text x="360" y="103" textAnchor="middle" fill="#ffc76b" fontSize="10.5" fontFamily="JetBrains Mono" fontWeight="700">
+      <text x="360" y="103" textAnchor="middle" fill="#364272" fontSize="10.5" fontFamily="JetBrains Mono" fontWeight="700">
         SEPARATION
       </text>
-      <text x="360" y="116" textAnchor="middle" fill="#abb8d5" fontSize="9" fontFamily="Atkinson Hyperlegible">
+      <text x="360" y="116" textAnchor="middle" fill="#4e5b8a" fontSize="9" fontWeight="600" fontFamily="Plus Jakarta Sans">
         Never alters score
       </text>
 
       {/* Right box: Verified NASA Context */}
-      <rect x="420" y="20" width="280" height="150" rx="14" fill="#111a35" stroke="#4f8cff" strokeWidth="1.8" />
-      <text x="560" y="45" textAnchor="middle" fill="#4f8cff" fontSize="12" fontFamily="JetBrains Mono" fontWeight="700">
+      <rect x="420" y="20" width="280" height="150" rx="14" fill="#fffefa" stroke="#6aa6ff" strokeWidth="2.2" />
+      <text x="560" y="45" textAnchor="middle" fill="#2374b8" fontSize="12" fontFamily="JetBrains Mono" fontWeight="700">
         LIVE_DATA / ARCHIVED_DATA
       </text>
-      <text x="560" y="68" textAnchor="middle" fill="#f5f7ff" fontSize="13" fontFamily="Space Grotesk" fontWeight="700">
+      <text x="560" y="68" textAnchor="middle" fill="#222a5b" fontSize="13" fontFamily="Outfit" fontWeight="800">
         NASA Space-Weather Context
       </text>
-      <text x="560" y="92" textAnchor="middle" fill="#abb8d5" fontSize="11" fontFamily="Atkinson Hyperlegible">
+      <text x="560" y="92" textAnchor="middle" fill="#4e5b8a" fontSize="11" fontFamily="Plus Jakarta Sans">
         • Server route /api/space-weather (key server-only)
       </text>
-      <text x="560" y="112" textAnchor="middle" fill="#abb8d5" fontSize="11" fontFamily="Atkinson Hyperlegible">
+      <text x="560" y="112" textAnchor="middle" fill="#4e5b8a" fontSize="11" fontFamily="Plus Jakarta Sans">
         • DONKI Catalog: FLR, SEP, CME + timestamps
       </text>
-      <text x="560" y="132" textAnchor="middle" fill="#abb8d5" fontSize="11" fontFamily="Atkinson Hyperlegible">
+      <text x="560" y="132" textAnchor="middle" fill="#4e5b8a" fontSize="11" fontFamily="Plus Jakarta Sans">
         • Preliminary research data (not medical forecast)
       </text>
-      <text x="560" y="155" textAnchor="middle" fill="#ffc76b" fontSize="10.5" fontFamily="JetBrains Mono">
+      <text x="560" y="155" textAnchor="middle" fill="#2374b8" fontSize="10.5" fontWeight="700" fontFamily="JetBrains Mono">
         Read-Only Educational Context
       </text>
     </svg>
@@ -161,11 +161,11 @@ export default function Teacher() {
       <div className="no-print space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="hud-label">Optional Educator &amp; Judge Layer · Separate From Child HUD</p>
-            <h1 className="mt-1 font-display text-3xl font-bold text-ink md:text-4xl">
+            <p className="hud-label !text-[#ffe49e]">Optional Educator &amp; Judge Layer · Separate From Child HUD</p>
+            <h1 className="mt-1 font-display text-3xl font-bold text-white md:text-4xl">
               Teacher &amp; Judge Guide
             </h1>
-            <p className="mt-2 max-w-3xl text-base text-dim">
+            <p className="mt-2 max-w-3xl text-base text-[#dce4ff]">
               Detailed learning outcomes, exact simulation math, real mission history inspection, and NASA vs. simulated data boundaries — tucked cleanly away so young explorers only see visual controls on the Moon Base.
             </p>
           </div>
@@ -183,10 +183,10 @@ export default function Teacher() {
         </div>
 
         <div
-          className="flex flex-wrap items-center gap-3 rounded-2xl border border-ok/35 bg-ok/10 px-4 py-3 text-sm text-ink"
+          className="flex flex-wrap items-center gap-3 rounded-2xl border-2 border-[#b9e6d5] bg-[#e9fbf3] px-4 py-3 text-sm text-[#174d36]"
           data-testid="banner-teacher-privacy"
         >
-          <Lock className="h-4 w-4 shrink-0 text-ok" aria-hidden />
+          <Lock className="h-4 w-4 shrink-0 text-[#1b7c54]" aria-hidden />
           <p className="flex-1">
             <strong>No accounts or personal tracking:</strong> AstroBorneo never asks for student names, school IDs, birth dates, or contact info. Saved missions live strictly in this browser&apos;s local storage and are never cloud-shared.
             {activeMissionPaused && ` Your Cycle ${game!.cycle} mission stays safely paused and unchanged.`}
@@ -282,7 +282,7 @@ export default function Teacher() {
                   className={cn(
                     'inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition',
                     selectedResource === item.key
-                      ? 'border-aqua bg-aqua/20 text-ink ring-1 ring-aqua/60'
+                      ? 'border-[#ffca6b] bg-[#ffe7a1] text-[#364272]'
                       : 'border-dim/20 bg-deep/65 text-dim hover:border-aqua/40 hover:text-ink',
                   )}
                 >

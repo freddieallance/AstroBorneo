@@ -12,6 +12,7 @@ import {
   Database,
   Droplets,
   HelpCircle,
+  Music,
   Pause,
   Play,
   Radio,
@@ -46,6 +47,15 @@ import {
 import { moduleStatuses } from '@/lib/modules';
 import type { QuizState } from '@/lib/records';
 import { isSpeechSupported, loadSoundPref, saveSoundPref, speakText, stopSpeech } from '@/lib/speech';
+import {
+  attachMusicLifecycle,
+  loadMusicPref,
+  playMusicalBeep,
+  playSfx,
+  saveMusicPref,
+  startBackgroundMusic,
+  stopBackgroundMusic,
+} from '@/lib/sfx';
 import {
   getGetSpaceWeatherQueryKey,
   loadSavedSpaceWeatherContext,
@@ -86,6 +96,7 @@ export default function JudgeDemo() {
   const [, go] = useLocation();
   const [session, setSession] = useState<DemoSessionState>(loadDemoSession);
   const [soundOn, setSoundOn] = useState(loadSoundPref);
+  const [musicOn, setMusicOn] = useState(loadMusicPref);
   const [sourcesOpen, setSourcesOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [showQuizWhy, setShowQuizWhy] = useState(false);
@@ -133,12 +144,17 @@ export default function JudgeDemo() {
 
   const hasArchivedOrLiveContext = nasaLabel !== 'Simulated Training';
 
-  // Persist disposable Judge Demo session strictly in sessionStorage (never touches player localStorage)
+  // Persist disposable Story Guide session strictly in sessionStorage (never touches player localStorage)
   useEffect(() => {
     saveDemoSession(session);
   }, [session]);
 
-  useEffect(() => () => stopSpeech(), []);
+  useEffect(() => attachMusicLifecycle(() => musicOn), [musicOn]);
+
+  useEffect(() => () => {
+    stopSpeech();
+    stopBackgroundMusic();
+  }, []);
 
   const currentStep = DEMO_STEPS[session.stepIndex] ?? DEMO_STEPS[0];
 
@@ -205,6 +221,7 @@ export default function JudgeDemo() {
   );
 
   const goToStep = (nextIdx: number) => {
+    playSfx('tap');
     const bounded = Math.max(0, Math.min(DEMO_STEPS.length - 1, nextIdx));
     setShowLessonNote(false);
     setShowQuizWhy(false);
@@ -235,6 +252,8 @@ export default function JudgeDemo() {
   };
 
   const handleRunCycleOnce = () => {
+    playSfx('launch');
+    playMusicalBeep(true);
     const res = commitDemoCycleOnce(session);
     if (res.review && res.ranNow) {
       setRecoveringModules(getRecoveringModules(res.review));
@@ -247,6 +266,7 @@ export default function JudgeDemo() {
   };
 
   const handleReplay = () => {
+    playSfx('tap');
     stopSpeech();
     setRecoveringModules([]);
     setShowLessonNote(false);
@@ -259,7 +279,9 @@ export default function JudgeDemo() {
   };
 
   const handleExitDemo = () => {
+    playSfx('tap');
     stopSpeech();
+    stopBackgroundMusic();
     clearDemoSession();
     go('/');
   };
@@ -295,6 +317,7 @@ export default function JudgeDemo() {
           : null;
 
   const patchDemoDraft = (patch: Partial<Decision>) => {
+    playMusicalBeep(true);
     setSession((prev) => ({
       ...prev,
       draft: { ...prev.draft, ...patch },
@@ -306,6 +329,19 @@ export default function JudgeDemo() {
     setSoundOn(next);
     saveSoundPref(next);
     if (!next) stopSpeech();
+    else playSfx('tap');
+  };
+
+  const toggleMusic = () => {
+    const next = !musicOn;
+    setMusicOn(next);
+    saveMusicPref(next);
+    if (next) {
+      playMusicalBeep(true);
+      startBackgroundMusic();
+    } else {
+      stopBackgroundMusic();
+    }
   };
 
   const previewDeltas =
@@ -314,20 +350,27 @@ export default function JudgeDemo() {
       : demoReview?.delta ?? null;
 
   return (
-    <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-deep text-ink" data-testid="page-judge-demo">
-      {/* Top Demo HUD: Truthful Demo Badge + NASA Mode + Live Engine Gauges + Replay / Exit */}
-      <header className="z-30 shrink-0 border-b border-aqua/25 bg-hull px-2.5 py-2 lg:px-4">
+    <div
+      className="relative flex h-[100dvh] w-full flex-col overflow-hidden text-ink"
+      style={{
+        background:
+          'radial-gradient(circle at 12% 8%, rgba(86, 92, 148, 0.88), transparent 40%), linear-gradient(150deg, #252d66 0%, #151b42 100%)',
+      }}
+      data-testid="page-judge-demo"
+    >
+      {/* Top Story Guide HUD: Matches Moon Base Cream Storybook Card */}
+      <header className="z-30 mx-2.5 mt-2 shrink-0 rounded-[20px] border-2 border-white bg-[#fffefa] px-3 py-2 shadow-[0_8px_22px_rgba(8,14,42,0.22)] lg:mx-3 lg:px-4">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-2 lg:flex-nowrap">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 sm:flex-none">
             <span
-              className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-aqua/45 bg-aqua/15 px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-aqua"
+              className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[#ffca6b] bg-[#ffe7a1]/80 px-2.5 py-1 font-display text-[11px] font-extrabold uppercase tracking-wider text-[#364272]"
               data-testid="badge-demo-scenario"
             >
-              <Sparkles className="h-3.5 w-3.5" aria-hidden /> Demo Scenario
+              <Sparkles className="h-3.5 w-3.5" aria-hidden /> How to Play · Story Guide
             </span>
 
             <span
-              className="shrink-0 rounded-lg border border-dim/20 bg-deep/75 px-2 py-1 font-mono text-xs font-semibold text-ink tabular-nums"
+              className="shrink-0 rounded-xl border border-[#dce3fa] bg-[#f4f7ff] px-2.5 py-1 font-mono text-xs font-bold text-[#222a5b] tabular-nums"
               data-testid="text-demo-cycle"
             >
               C{activeState.cycle}/5
@@ -338,10 +381,10 @@ export default function JudgeDemo() {
               onClick={() => setSourcesOpen(true)}
               data-testid="button-demo-nasa-mode"
               className={cn(
-                'inline-flex max-w-[165px] items-center gap-1 truncate rounded-lg border px-2 py-1 font-mono text-[10px] font-semibold transition hover:brightness-110 sm:max-w-none',
+                'inline-flex max-w-[165px] items-center gap-1 truncate rounded-xl border px-2.5 py-1 font-mono text-[10px] font-bold transition hover:brightness-95 sm:max-w-none',
                 hasArchivedOrLiveContext
-                  ? 'border-aqua/40 bg-aqua/10 text-aqua'
-                  : 'border-warn/40 bg-warn/10 text-warn',
+                  ? 'border-[#b9d9ff] bg-[#eef6ff] text-[#2374b8]'
+                  : 'border-[#ffdca6] bg-[#fff8e8] text-[#b86b0d]',
               )}
               title="Educational simulation. Click to inspect NASA Sources."
             >
@@ -351,7 +394,7 @@ export default function JudgeDemo() {
           </div>
 
           {/* Real Engine Resource Strip */}
-          <div className="order-3 grid w-full grid-cols-3 gap-1 sm:grid-cols-6 lg:order-2 lg:flex lg:w-auto lg:flex-1 lg:items-center lg:justify-center lg:gap-1.5" data-testid="demo-hud-resources">
+          <div className="order-3 grid w-full grid-cols-3 gap-1.5 sm:grid-cols-6 lg:order-2 lg:flex lg:w-auto lg:flex-1 lg:items-center lg:justify-center" data-testid="demo-hud-resources">
             {HUD_KEYS.map((k) => {
               const val = activeState.resources[k];
               const d = previewDeltas ? previewDeltas[k] : null;
@@ -359,21 +402,21 @@ export default function JudgeDemo() {
                 <div
                   key={k}
                   data-testid={`demo-hud-${k}`}
-                  className="flex items-center gap-1 rounded-lg border border-dim/20 bg-deep/75 px-1.5 py-1 lg:min-w-[88px] lg:px-2"
+                  className="flex items-center gap-1.5 rounded-xl border border-[#dfe5fa] bg-[#f4f7ff] px-2 py-1 lg:min-w-[88px]"
                 >
                   <span style={{ color: tone(val) }} className="shrink-0">
                     <ResourceIcon k={k} className="h-3.5 w-3.5" />
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline justify-between gap-0.5">
-                      <span className="hidden text-[10px] font-semibold uppercase text-dim xl:inline">
+                      <span className="hidden text-[10px] font-bold uppercase text-[#5b6b94] xl:inline">
                         {k === 'safety' ? 'Safe' : k === 'power' ? 'Pwr' : RESOURCE_META[k].label}
                       </span>
-                      <span className="font-mono text-xs font-bold tabular-nums text-ink" data-testid={`demo-hud-value-${k}`}>
+                      <span className="font-mono text-xs font-bold tabular-nums text-[#222a5b]" data-testid={`demo-hud-value-${k}`}>
                         {val}
                       </span>
                     </div>
-                    <div className="mt-0.5 h-1 w-full overflow-hidden rounded-full bg-plate">
+                    <div className="mt-0.5 h-1.5 w-full overflow-hidden rounded-full bg-[#dde4fb]">
                       <div className="h-full rounded-full transition-[width] duration-300" style={{ width: `${Math.max(5, val)}%`, background: tone(val) }} />
                     </div>
                   </div>
@@ -392,14 +435,30 @@ export default function JudgeDemo() {
                 </div>
               );
             })}
-            <div className="flex items-center justify-center gap-1 rounded-lg border border-ion/30 bg-deep/75 px-1.5 py-1 lg:px-2" data-testid="demo-hud-science">
+            <div className="flex items-center justify-center gap-1 rounded-xl border border-[#dfe5fa] bg-[#f4f7ff] px-2 py-1" data-testid="demo-hud-science">
               <ResourceIcon k="science" className="h-3.5 w-3.5 text-ion" />
-              <span className="font-mono text-xs font-bold tabular-nums text-ink">{activeState.science}</span>
+              <span className="font-mono text-xs font-bold tabular-nums text-[#222a5b]">{activeState.science}</span>
             </div>
           </div>
 
-          {/* Right Controls: Sound, Replay, Exit Demo */}
+          {/* Right Controls: Music, Sound, Replay, Exit Guide */}
           <div className="order-2 flex shrink-0 items-center gap-1.5 lg:order-3">
+            <button
+              type="button"
+              onClick={toggleMusic}
+              aria-pressed={musicOn}
+              className={cn(
+                'inline-flex h-9 items-center gap-1 rounded-xl border px-2.5 text-xs font-bold transition',
+                musicOn
+                  ? 'border-[#b9e6d5] bg-[#e9fbf3] text-[#1b7c54]'
+                  : 'border-[#dce3fa] bg-[#f4f7ff] text-[#5b6b94] hover:text-[#222a5b]',
+              )}
+              data-testid="button-demo-music"
+              aria-label={musicOn ? 'Turn off background music' : 'Turn on background music'}
+            >
+              <Music className="h-3.5 w-3.5" aria-hidden />
+              <span className="hidden xl:inline">{musicOn ? 'Music On' : 'Music Off'}</span>
+            </button>
             {isSpeechSupported() && (
               <button
                 type="button"
@@ -407,7 +466,7 @@ export default function JudgeDemo() {
                 aria-pressed={soundOn}
                 className={cn(
                   'grid h-9 w-9 place-items-center rounded-xl border transition',
-                  soundOn ? 'border-aqua bg-aqua/15 text-aqua' : 'border-dim/25 bg-plate/50 text-dim hover:text-ink',
+                  soundOn ? 'border-[#b9d9ff] bg-[#eef6ff] text-[#2374b8]' : 'border-[#dce3fa] bg-[#f4f7ff] text-[#5b6b94] hover:text-[#222a5b]',
                 )}
                 data-testid="button-demo-sound"
                 aria-label={soundOn ? 'Turn off presenter voice' : 'Turn on presenter voice'}
@@ -418,31 +477,32 @@ export default function JudgeDemo() {
             <button
               type="button"
               onClick={handleReplay}
-              className="inline-flex h-9 items-center gap-1 rounded-xl border border-dim/25 bg-plate/60 px-2.5 text-xs font-semibold text-ink hover:border-aqua"
+              className="inline-flex h-9 items-center gap-1 rounded-xl border border-[#dce3fa] bg-[#f4f7ff] px-2.5 text-xs font-bold text-[#344270] hover:border-[#b9d9ff]"
               data-testid="button-demo-replay"
-              title="One-tap Replay Demo"
+              title="One-tap Replay Guide"
             >
-              <RotateCcw className="h-3.5 w-3.5 text-aqua" />
+              <RotateCcw className="h-3.5 w-3.5 text-[#2374b8]" />
               <span className="hidden sm:inline">Replay</span>
             </button>
             <button
               type="button"
               onClick={handleExitDemo}
-              className="inline-flex h-9 items-center gap-1 rounded-xl border border-warn/45 bg-warn/15 px-3 text-xs font-bold text-warn hover:bg-warn/25"
+              className="inline-flex h-9 items-center gap-1 rounded-xl border border-[#f5c7a8] bg-[#fff5eb] px-3 text-xs font-bold text-[#b86b0d] hover:bg-[#ffedd9]"
               data-testid="button-demo-exit"
             >
-              <X className="h-3.5 w-3.5" /> Exit Demo
+              <X className="h-3.5 w-3.5" /> Exit Guide
             </button>
           </div>
         </div>
       </header>
 
       {/* Main Persistent Moon Base Stage */}
-      <main className="relative flex flex-1 flex-col overflow-hidden bg-gradient-to-b from-[#070b1b] via-[#111a35] to-[#18203d]">
-        <div className="relative flex-1 overflow-hidden">
+      <main className="relative flex flex-1 flex-col gap-2 overflow-hidden px-2.5 py-2 lg:px-3">
+        <div className="relative flex-1 overflow-hidden rounded-[22px] border-4 border-white shadow-[0_14px_34px_rgba(8,14,42,0.28)]">
           <LunarScene
             statuses={statuses}
             onSelect={(id) => {
+              playMusicalBeep(true);
               if (currentStep.id === 'facilities') {
                 const idx = FACILITY_CUES.findIndex((f) => f.id === id);
                 if (idx >= 0) {
@@ -471,29 +531,29 @@ export default function JudgeDemo() {
             }}
           />
 
-          {/* Step 1: Commander Welcome Card */}
+          {/* Step 1: How to Play Commander Welcome Card */}
           {currentStep.id === 'welcome' && (
             <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex justify-center md:bottom-5">
               <div
-                className="pointer-events-auto w-full max-w-lg rounded-2xl border border-aqua/45 bg-hull p-4 shadow-2xl"
+                className="pointer-events-auto w-full max-w-lg rounded-3xl border-[3px] border-white bg-[#fffefa] p-4 shadow-[0_14px_34px_rgba(8,14,42,0.28)]"
                 data-testid="demo-card-welcome"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-aqua/35 bg-plate text-aqua">
+                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-[#dfe5fa] bg-[#eef3ff] text-[#2374b8]">
                       <Rocket className="h-6 w-6" aria-hidden />
                     </div>
                     <div>
-                      <p className="hud-label">2-Minute Visual Judge Demo</p>
-                      <h1 className="font-display text-2xl font-bold text-ink">You are Commander</h1>
+                      <p className="hud-label whitespace-nowrap">Story Guide · 7 Quick Steps</p>
+                      <h1 className="font-display text-2xl font-extrabold text-[#222a5b]">You are Commander!</h1>
                     </div>
                   </div>
-                  <span className="rounded-lg border border-dim/25 bg-deep/75 px-2.5 py-1 font-mono text-xs text-aqua">
+                  <span className="shrink-0 whitespace-nowrap rounded-xl border border-[#dfe5fa] bg-[#f4f7ff] px-2.5 py-1 font-mono text-xs font-bold text-[#2374b8]">
                     4 Crew · 5 Systems
                   </span>
                 </div>
-                <p className="mt-2.5 text-sm text-dim">
-                  Every number ahead comes directly from AstroBorneo&apos;s live simulation engine. Your normal mission save stays untouched.
+                <p className="mt-2.5 text-sm text-[#4e5b8a]">
+                  Learn how to balance Power, Air, Water, Food &amp; Safety in 7 quick steps before you launch your real Moon Base mission. Your saved mission stays untouched.
                 </p>
                 <div className="mt-3.5 flex flex-wrap items-center gap-2">
                   <button
@@ -797,9 +857,9 @@ export default function JudgeDemo() {
 
           {/* Step 6: Single Visual 4-Choice Science Question Popup */}
           {currentStep.id === 'quiz' && (
-            <div className="absolute inset-0 z-20 flex items-center justify-center bg-[#070b1b]/80 p-3">
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-[#14193f]/72 p-3">
               <div
-                className="max-h-[82dvh] w-full max-w-xl overflow-y-auto rounded-2xl border border-aqua/40 bg-hull p-4 shadow-2xl"
+                className="max-h-[82dvh] w-full max-w-xl overflow-y-auto rounded-3xl border-[3px] border-white bg-[#fffefa] p-4 shadow-2xl"
                 data-testid="demo-card-quiz"
               >
                 <div className="mb-2 flex items-center justify-between gap-2">
@@ -833,7 +893,10 @@ export default function JudgeDemo() {
                         role="radio"
                         aria-checked={isPicked}
                         disabled={isSubmitted}
-                        onClick={() => setQuizDraftPick(i)}
+                        onClick={() => {
+                          playSfx('tap');
+                          setQuizDraftPick(i);
+                        }}
                         data-testid={`demo-quiz-answer-${i}`}
                         className={cn(
                           'flex flex-col items-center justify-between gap-1.5 rounded-2xl border p-2 text-center transition',
@@ -863,6 +926,9 @@ export default function JudgeDemo() {
                       disabled={quizDraftPick === null}
                       onClick={() => {
                         if (quizDraftPick === null) return;
+                        const ok = quizDraftPick === demoQuizQuestion.answer;
+                        playMusicalBeep(ok);
+                        playSfx(ok ? 'good' : 'oops');
                         setSession((prev) => ({ ...prev, quizAnswer: quizDraftPick }));
                       }}
                       className={cn(btn.primary, 'min-h-[42px] px-4 py-2 text-sm')}
@@ -894,14 +960,14 @@ export default function JudgeDemo() {
 
           {/* Step 7: Visual End State + Optional NASA Sources Overlay */}
           {currentStep.id === 'outcome' && session.outcomeState && (
-            <div className="absolute inset-0 z-20 flex items-center justify-center bg-[#070b1b]/80 p-3">
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-[#14193f]/72 p-3">
               <div
-                className="max-h-[84dvh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-aqua/40 bg-hull p-4 shadow-2xl sm:p-5"
+                className="max-h-[84dvh] w-full max-w-2xl overflow-y-auto rounded-3xl border-[3px] border-white bg-[#fffefa] p-4 shadow-2xl sm:p-5"
                 data-testid="demo-card-outcome"
               >
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                   <span className="inline-flex items-center gap-1 rounded-md border border-aqua/35 bg-aqua/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-aqua">
-                    Demo Scenario · Real Engine C1–C5 Output
+                    Story Guide · Real Engine C1–C5 Output
                   </span>
                   <button
                     type="button"
@@ -920,7 +986,7 @@ export default function JudgeDemo() {
                   onRequestRestart={handleReplay}
                   onOpenReport={() => setReportOpen(true)}
                   onOpenSources={() => setSourcesOpen(true)}
-                  quizCtaLabel="Revisit Demo Question"
+                  quizCtaLabel="Revisit Guide Question"
                   soundOn={false}
                 />
               </div>
@@ -928,10 +994,10 @@ export default function JudgeDemo() {
           )}
         </div>
 
-        {/* Persistent Bottom Judge Stepper Bar */}
-        <footer className="z-30 shrink-0 border-t border-dim/20 bg-hull/95 px-3 py-2">
+        {/* Persistent Bottom Stepper Bar */}
+        <footer className="z-30 shrink-0 rounded-[18px] border-2 border-white bg-[#fffefa] px-3 py-2 shadow-[0_8px_22px_rgba(8,14,42,0.22)]">
           <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-1" role="tablist" aria-label="Demo steps">
+            <div className="flex flex-wrap items-center gap-1" role="tablist" aria-label="Guide steps">
               {DEMO_STEPS.map((s, idx) => (
                 <button
                   key={s.id}
@@ -941,12 +1007,12 @@ export default function JudgeDemo() {
                   onClick={() => goToStep(idx)}
                   data-testid={`button-demo-step-${s.id}`}
                   className={cn(
-                    'rounded-lg px-2 py-1 font-mono text-[11px] font-semibold transition',
+                    'rounded-xl border px-2.5 py-1 font-mono text-[11px] font-bold transition',
                     idx === session.stepIndex
-                      ? 'bg-aqua text-deep'
+                      ? 'border-[#ffca6b] bg-[#ffe7a1] text-[#364272]'
                       : idx < session.stepIndex
-                        ? 'bg-plate text-ok hover:brightness-110'
-                        : 'bg-deep/75 text-dim hover:text-ink',
+                        ? 'border-[#b9e6d5] bg-[#e9fbf3] text-[#1b7c54] hover:brightness-95'
+                        : 'border-[#dce3fa] bg-[#f4f7ff] text-[#5b6b94] hover:text-[#222a5b]',
                   )}
                 >
                   {s.shortLabel}
@@ -987,11 +1053,15 @@ export default function JudgeDemo() {
               ) : (
                 <button
                   type="button"
-                  onClick={handleExitDemo}
+                  onClick={() => {
+                    playSfx('launch');
+                    stopBackgroundMusic();
+                    go('/base?autostart=1');
+                  }}
                   className={cn(btn.primary, 'min-h-[38px] px-4 py-1.5 text-xs')}
                   data-testid="button-demo-finish-exit"
                 >
-                  Exit Demo
+                  <Rocket className="h-3.5 w-3.5" /> Start Real Mission
                 </button>
               )}
             </div>

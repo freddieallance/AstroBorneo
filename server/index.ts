@@ -7,11 +7,20 @@ import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateDates, weather } from './nasa/service';
+import { getNasaResearch } from './nasa/research';
 import type { EventType } from './nasa/providers';
 
 const app = express();
 app.disable('x-powered-by');
 app.get('/api/healthz', (_req, res) => { res.json({ status: 'ok' }); });
+app.get('/api/nasa/research', async (_req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  try {
+    res.json(await getNasaResearch(false));
+  } catch {
+    res.json(await getNasaResearch(true));
+  }
+});
 app.get('/api/nasa/space-weather', async (req, res) => {
   const { eventType = 'FLR', startDate = '2024-05-10', endDate = '2024-05-10', mode = 'auto' } = req.query;
   if (Object.keys(req.query).some(k => !['eventType', 'startDate', 'endDate', 'mode'].includes(k))

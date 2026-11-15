@@ -24,7 +24,7 @@ export interface SceneVisualState {
   commsPingStage?: 'idle' | 'out' | 'back' | 'done';
 }
 
-const COL = { ok: '#35d2a0', warn: '#ffc76b', bad: '#ff727e', off: '#7e8ba8' };
+const COL = { ok: '#1b7c54', warn: '#b86b0d', bad: '#c43a51', off: '#5b6b94' };
 
 const POS: Record<ModuleId, { x: number; y: number }> = {
   solar: { x: 135, y: 335 },
@@ -75,10 +75,10 @@ function ModuleIconGlyph({ id, color }: { id: ModuleId; color: string }) {
   }
 }
 
-function FaultWrenchBadge({ color = '#ffc76b', ringColor = '#ffc76b' }: { color?: string; ringColor?: string }) {
+function FaultWrenchBadge({ color = '#ffca6b', ringColor = '#e7a959' }: { color?: string; ringColor?: string }) {
   return (
     <g transform="translate(46 -92)" aria-hidden>
-      <circle r="14" fill="#111a35" stroke={ringColor} strokeWidth="2.2" />
+      <circle r="14" fill="#2a3366" stroke={ringColor} strokeWidth="2.2" />
       <path
         d="M-4.5 4.5 L4.5 -4.5 M2 -6.5 A3.5 3.5 0 0 1 6.5 -2 L3.5 -1.5 L1.5 -3.5 Z"
         stroke={color}
@@ -378,43 +378,44 @@ export function LunarScene({
     >
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#070b1b" />
-          <stop offset="1" stopColor="#111a35" />
+          <stop offset="0" stopColor="#52497e" />
+          <stop offset="0.68" stopColor="#72669f" />
+          <stop offset="1" stopColor="#8f81b8" />
         </linearGradient>
-        <radialGradient id="sun" cx="0.04" cy="0.58" r="0.52">
-          <stop offset="0" stopColor="#ffc76b" stopOpacity={lowSun ? '.16' : '.58'} />
-          <stop offset="1" stopColor="#ffc76b" stopOpacity="0" />
+        <radialGradient id="sun" cx="0.06" cy="0.54" r="0.54">
+          <stop offset="0" stopColor="#ffe196" stopOpacity={lowSun ? '.24' : '.68'} />
+          <stop offset="1" stopColor="#ffe196" stopOpacity="0" />
         </radialGradient>
         <radialGradient id="earth" cx=".35" cy=".35">
-          <stop offset="0" stopColor="#7fd3ff" />
+          <stop offset="0" stopColor="#8be0ff" />
           <stop offset=".6" stopColor="#4f8cff" />
-          <stop offset="1" stopColor="#1b3270" />
+          <stop offset="1" stopColor="#26479c" />
         </radialGradient>
         <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#3c4666" />
-          <stop offset="1" stopColor="#18203d" />
+          <stop offset="0" stopColor="#dbd3eb" />
+          <stop offset="1" stopColor="#b8aed0" />
         </linearGradient>
         <linearGradient id="hullShade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fff" stopOpacity=".2" />
-          <stop offset="1" stopColor="#111a35" stopOpacity=".5" />
+          <stop offset="0" stopColor="#fff" stopOpacity=".24" />
+          <stop offset="1" stopColor="#5a6596" stopOpacity=".35" />
         </linearGradient>
         <pattern id="regolith" width="8" height="8" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1" fill="#8b94ad" fillOpacity=".5" />
-          <circle cx="6" cy="5" r=".8" fill="#2a3150" />
+          <circle cx="2" cy="2" r="1" fill="#8b94ad" fillOpacity=".45" />
+          <circle cx="6" cy="5" r=".8" fill="#5e688f" />
         </pattern>
       </defs>
 
-      {/* Deep Lunar Sky */}
+      {/* Twilight Lunar Sky */}
       <rect width="1000" height="540" fill="url(#sky)" pointerEvents="none" />
       <g pointerEvents="none">
         {Array.from({ length: 56 }, (_, i) => (
           <circle
             key={i}
-            opacity={0.3 + (i % 5) * 0.15}
+            opacity={0.35 + (i % 5) * 0.14}
             cx={(i * 173) % 1000}
             cy={(i * 97) % 235}
-            r={(i % 3) * 0.5 + 0.6}
-            fill="#f5f7ff"
+            r={(i % 3) * 0.5 + 0.7}
+            fill="#fffefa"
           />
         ))}
       </g>
@@ -425,10 +426,10 @@ export function LunarScene({
       {/* Cycle 4 Gentle Solar-Energy Sky Effect (stylized teaching cue, not a measurement) */}
       {stormAlert && (
         <g pointerEvents="none" aria-hidden>
-          <rect width="1000" height="300" fill="#ffc76b" fillOpacity="0.06" />
+          <rect width="1000" height="300" fill="#ffcf79" fillOpacity="0.1" />
           <g className="solar-wave">
-            <path d="M40 72 Q220 40 420 78 T860 58" fill="none" stroke="#ffc76b" strokeOpacity="0.32" strokeWidth="2.5" strokeDasharray="10 10" />
-            <path d="M120 112 Q310 82 520 116 T940 94" fill="none" stroke="#ff727e" strokeOpacity="0.24" strokeWidth="2" strokeDasharray="8 12" />
+            <path d="M40 72 Q220 40 420 78 T860 58" fill="none" stroke="#ffe196" strokeOpacity="0.45" strokeWidth="2.5" strokeDasharray="10 10" />
+            <path d="M120 112 Q310 82 520 116 T940 94" fill="none" stroke="#ff949f" strokeOpacity="0.34" strokeWidth="2" strokeDasharray="8 12" />
           </g>
         </g>
       )}
@@ -436,32 +437,32 @@ export function LunarScene({
       {/* Earth in Sky */}
       <g className="drift" pointerEvents="none">
         <circle cx="755" cy="96" r="34" fill="url(#earth)" />
-        <path d="M743 76 q14 6 8 20 q-10 6 -16 -6z M765 104 q10 -4 14 6 q-6 8 -14 -6z" fill="#35d2a0" fillOpacity=".75" />
-        <text x="755" y="150" textAnchor="middle" fill="#abb8d5" fontSize="11.5" fontFamily="JetBrains Mono">EARTH</text>
+        <path d="M743 76 q14 6 8 20 q-10 6 -16 -6z M765 104 q10 -4 14 6 q-6 8 -14 -6z" fill="#57d3a1" fillOpacity=".82" />
+        <text x="755" y="150" textAnchor="middle" fill="#eef3ff" fontSize="11.5" fontWeight="700" fontFamily="JetBrains Mono">EARTH</text>
       </g>
 
       {/* Live Send-to-Earth Teaching Ping Beam (never changes game state) */}
       {(ping === 'out' || ping === 'back') && (
         <g aria-hidden pointerEvents="none">
-          <line x1="905" y1="142" x2="780" y2="104" stroke="#35d9e8" strokeWidth="2.5" strokeDasharray="6 6" />
-          <circle cx={ping === 'out' ? 842 : 880} cy={ping === 'out' ? 123 : 134} r="6" fill={ping === 'out' ? '#35d9e8' : '#35d2a0'} />
+          <line x1="905" y1="142" x2="780" y2="104" stroke="#7fd8ff" strokeWidth="2.5" strokeDasharray="6 6" />
+          <circle cx={ping === 'out' ? 842 : 880} cy={ping === 'out' ? 123 : 134} r="6" fill={ping === 'out' ? '#7fd8ff' : '#57d3a1'} />
         </g>
       )}
 
-      {/* Distant Crater Ridge & Regolith Terrain */}
+      {/* Distant Crater Ridge & Pastel Regolith Terrain */}
       <g pointerEvents="none">
-        <path d="M0 300 L90 262 L180 286 L260 242 L380 292 L470 272 L600 302 L720 256 L840 290 L1000 266 V540 H0 Z" fill="#222a47" />
+        <path d="M0 300 L90 262 L180 286 L260 242 L380 292 L470 272 L600 302 L720 256 L840 290 L1000 266 V540 H0 Z" fill="#a296be" />
         <path d="M0 332 Q200 302 400 332 T800 322 T1000 332 V540 H0 Z" fill="url(#ground)" />
-        <path d="M0 332 L1000 362 L1000 382 L0 352Z" fill="#080d1f" opacity=".24" />
-        <ellipse cx="420" cy="496" rx="120" ry="18" fill="#141a35" />
-        <ellipse cx="420" cy="492" rx="110" ry="13" fill="#2b3456" />
-        <ellipse cx="870" cy="510" rx="70" ry="10" fill="#141a35" />
+        <path d="M0 332 L1000 362 L1000 382 L0 352Z" fill="#7c709e" opacity=".2" />
+        <ellipse cx="420" cy="496" rx="120" ry="18" fill="#9c92b8" />
+        <ellipse cx="420" cy="492" rx="110" ry="13" fill="#b4aad0" />
+        <ellipse cx="870" cy="510" rx="70" ry="10" fill="#9c92b8" />
 
         {/* Sparse Surface Rover/Footprint Path */}
-        <path d="M330 415 Q410 400 485 385 Q580 398 655 422 Q730 412 805 395" fill="none" stroke="#8b94ad" strokeOpacity="0.24" strokeWidth="10" strokeLinecap="round" />
+        <path d="M330 415 Q410 400 485 385 Q580 398 655 422 Q730 412 805 395" fill="none" stroke="#9b91b8" strokeOpacity="0.4" strokeWidth="10" strokeLinecap="round" />
 
         {/* Power & Water Cables */}
-        <g fill="none" stroke="#35d9e8" strokeOpacity=".58" strokeWidth="2.2">
+        <g fill="none" stroke="#4696db" strokeOpacity=".65" strokeWidth="2.4">
           <path className="cable" d="M135 335 Q285 430 485 372" />
           <path className="cable" d="M485 372 Q580 432 655 422" />
           <path className="cable" d="M300 414 Q395 410 485 372" />
@@ -469,17 +470,16 @@ export function LunarScene({
           <path className="cable" d="M805 392 Q885 322 922 238" />
         </g>
 
-        {/* Sparse stylized astronauts on base paths (friendly wave on mission success; safe indoors on shelter/fail) */}
+        {/* Sparse stylized astronauts on base paths */}
         {missionSucceeded ? (
           <g aria-hidden>
             <AstronautSilhouette x={392} y={392} scale={1} celebrating />
             <AstronautSilhouette x={432} y={396} scale={0.95} celebrating />
             <AstronautSilhouette x={552} y={398} scale={0.95} celebrating />
             <AstronautSilhouette x={588} y={395} scale={0.9} celebrating />
-            {/* Happy illuminated Base Ready sign over Habitat courtyard */}
             <g transform="translate(485 184)">
-              <rect x="-74" y="-16" width="148" height="28" rx="14" fill="#13312f" stroke="#35d2a0" strokeWidth="2" />
-              <text y="2" textAnchor="middle" fill="#35d2a0" fontSize="13" fontWeight="800" fontFamily="Outfit">
+              <rect x="-74" y="-16" width="148" height="28" rx="14" fill="#fffefa" stroke="#1b7c54" strokeWidth="2.5" />
+              <text y="3" textAnchor="middle" fill="#1b7c54" fontSize="13" fontWeight="800" fontFamily="Outfit">
                 BASE READY!
               </text>
             </g>
@@ -499,7 +499,7 @@ export function LunarScene({
 
       {/* Spotlight dim scrim during Guided Picture Intro or Active Event Spotlight */}
       {hasSpotlight && (
-        <rect width="1000" height="540" fill="#070b1b" fillOpacity="0.52" pointerEvents="none" />
+        <rect width="1000" height="540" fill="#201a4a" fillOpacity="0.48" pointerEvents="none" />
       )}
 
       {/* 6 Interactive Base Buildings */}
@@ -554,46 +554,46 @@ export function LunarScene({
                   rx="102"
                   ry="20"
                   className={(isPulsing || isAttention) && !isSpot ? 'pulse-soft' : undefined}
-                  fill={isSpot ? '#35d9e8' : isRecovering ? '#35d2a0' : isAttention ? '#ffc76b' : isPulsing ? '#4f8cff' : st.level === 'bad' ? '#ff727e' : 'none'}
-                  fillOpacity={isSpot ? 0.18 : isRecovering ? 0.16 : isAttention ? 0.18 : isPulsing ? 0.12 : st.level === 'bad' ? 0.12 : 0}
-                  stroke={isRecovering ? '#35d2a0' : isSpot ? '#35d9e8' : isAttention ? '#ffc76b' : isPulsing ? '#4f8cff' : st.level === 'bad' ? '#ff727e' : '#35d9e8'}
+                  fill={isSpot ? '#ffe196' : isRecovering ? '#57d3a1' : isAttention ? '#ffcf79' : isPulsing ? '#4f8cff' : st.level === 'bad' ? '#e55c6e' : 'none'}
+                  fillOpacity={isSpot ? 0.28 : isRecovering ? 0.22 : isAttention ? 0.24 : isPulsing ? 0.16 : st.level === 'bad' ? 0.16 : 0}
+                  stroke={isRecovering ? '#1b7c54' : isSpot ? '#ffcf79' : isAttention ? '#e7a959' : isPulsing ? '#2374b8' : st.level === 'bad' ? '#c43a51' : '#2374b8'}
                   strokeWidth={isSpot || isAttention ? '3.4' : '2.2'}
                   strokeDasharray={isSpot || isAttention ? undefined : '6 5'}
                 />
               )}
-              <ellipse className="module-ring" style={isSel ? { opacity: 1 } : undefined} cx="0" cy="4" rx="94" ry="16" fill="none" stroke="#35d9e8" strokeWidth="2.5" strokeDasharray="6 5" />
-              <ellipse cx="0" cy="4" rx="80" ry="10" fill="#080d1f" opacity=".48" />
+              <ellipse className="module-ring" style={isSel ? { opacity: 1 } : undefined} cx="0" cy="4" rx="94" ry="16" fill="none" stroke="#ffcf79" strokeWidth="2.8" strokeDasharray="6 5" />
+              <ellipse cx="0" cy="4" rx="80" ry="10" fill="#7d729c" opacity=".42" />
 
               <Art id={m.id} status={st} visual={visual} />
 
               {/* Status beacon above module */}
               <g transform="translate(0 -142)">
-                <circle r="14" fill="#111a35" stroke={col} strokeWidth="2.2" />
+                <circle r="15" fill="#fffefa" stroke={col} strokeWidth="2.4" />
                 <ModuleIconGlyph id={m.id} color={col} />
                 {(st.level === 'bad' || st.level === 'warn' || isSpot || isPulsing || isAttention || isRecovering) && (
-                  <circle r="14" fill="none" stroke={isRecovering ? '#35d2a0' : isAttention ? '#ffc76b' : isSpot ? '#35d9e8' : isPulsing ? '#4f8cff' : col} strokeWidth="2.5" className="beacon" />
+                  <circle r="15" fill="none" stroke={isRecovering ? '#1b7c54' : isAttention ? '#e7a959' : isSpot ? '#ffcf79' : isPulsing ? '#2374b8' : col} strokeWidth="2.5" className="beacon" />
                 )}
               </g>
 
               {/* Bouncing visual TAP! pointer on urgent cycle buildings */}
               {isAttention && (
                 <g transform="translate(0 -174)" className="bounce-gentle" aria-hidden>
-                  <rect x="-24" y="-14" width="48" height="20" rx="10" fill="#ffc76b" />
-                  <text y="0" textAnchor="middle" fill="#080d1f" fontSize="11" fontWeight="800" fontFamily="Outfit">
+                  <rect x="-24" y="-14" width="48" height="20" rx="10" fill="#ffe7a1" stroke="#e7a959" strokeWidth="1.5" />
+                  <text y="0" textAnchor="middle" fill="#364272" fontSize="11" fontWeight="800" fontFamily="Outfit">
                     TAP!
                   </text>
-                  <path d="M-5 6 L0 12 L5 6 Z" fill="#ffc76b" />
+                  <path d="M-5 6 L0 12 L5 6 Z" fill="#ffe7a1" />
                 </g>
               )}
 
-              {/* High-contrast kid-friendly nameplate under module */}
+              {/* Crisp cream nameplate under module matching Moon Base canvas */}
               <g transform="translate(0 26)">
-                <rect x="-72" y="-2" width="144" height={compactLabels ? '30' : '42'} rx="12" fill="#0f1730" fillOpacity=".96" stroke={isAttention ? '#ffc76b' : col} strokeOpacity=".85" strokeWidth="2" />
-                <text y="16" textAnchor="middle" fill="#f5f7ff" fontSize="14" fontWeight="700" fontFamily="Outfit">
+                <rect x="-72" y="-2" width="144" height={compactLabels ? '30' : '42'} rx="12" fill="#fffefa" fillOpacity=".96" stroke={isAttention ? '#e7a959' : col} strokeOpacity=".9" strokeWidth="2.2" />
+                <text y="16" textAnchor="middle" fill="#222a5b" fontSize="14" fontWeight="800" fontFamily="Outfit">
                   {CHILD_LABEL[m.id]}
                 </text>
                 {!compactLabels && (
-                  <text y="33" textAnchor="middle" fill={isAttention ? '#ffc76b' : col} fontSize="10.5" fontWeight="700" fontFamily="JetBrains Mono">
+                  <text y="33" textAnchor="middle" fill={isAttention ? '#b86b0d' : col} fontSize="10.5" fontWeight="700" fontFamily="JetBrains Mono">
                     {isOff
                       ? 'OFF'
                       : isAttention

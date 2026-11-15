@@ -32,8 +32,8 @@ export default function Results() {
   if (game.status === 'active') {
     return (
       <div className="py-20 text-center">
-        <h1 className="text-3xl font-bold">Mission still in progress</h1>
-        <p className="mt-2 text-dim">Finish all five cycles to see your results.</p>
+        <h1 className="text-3xl font-bold text-white">Mission still in progress</h1>
+        <p className="mt-2 text-[#dce4ff]">Finish all five cycles to see your results.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link href="/base" className={btn.primary} data-testid="button-back-base">
             <Rocket className="h-4 w-4" /> Back to Moon Base
@@ -57,11 +57,11 @@ export default function Results() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="hud-label">Mission Results · Operation Lunar Dawn</p>
-          <h1 className="text-2xl font-bold text-ink md:text-3xl">Your Moon Base Ending</h1>
+          <p className="hud-label !text-[#ffe49e]">Mission Results · Operation Lunar Dawn</p>
+          <h1 className="text-2xl font-bold text-white md:text-3xl">Your Moon Base Ending</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-lg border border-aqua/30 bg-deep/75 px-3 py-1.5 font-mono text-xs text-aqua" data-testid="text-score">
+          <span className="rounded-xl border border-white/25 bg-white/15 px-3 py-1.5 font-mono text-xs font-bold text-[#ffe49e]" data-testid="text-score">
             {total.label}: <strong>{total.value}</strong>/{total.maximum}
           </span>
           <Link href="/base" className={btn.ghost} data-testid="link-results-base">
@@ -72,7 +72,7 @@ export default function Results() {
 
       {/* Persistent Moon Base Scene centered with Child-Readable Visual Ending */}
       <div className="grid items-start gap-6 lg:grid-cols-[1.15fr_1fr]">
-        <div className="overflow-hidden rounded-3xl border border-dim/20 bg-deep/90 shadow-2xl">
+        <div className="overflow-hidden rounded-3xl border-[3px] border-white bg-[#fffefa] shadow-2xl">
           <div className="aspect-[1000/560] w-full">
             <LunarScene
               statuses={statuses}

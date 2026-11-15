@@ -106,7 +106,7 @@ export function VisualEndingIllustration({
   return (
     <svg
       viewBox="0 0 360 112"
-      className="h-16 w-full rounded-2xl border border-dim/20 bg-[#080d1f] sm:h-20"
+      className="h-16 w-full rounded-2xl border border-[#dfe5fa] bg-[#52497e] sm:h-20"
       role="img"
       aria-label={
         success
@@ -115,15 +115,15 @@ export function VisualEndingIllustration({
       }
       data-testid="visual-ending-illustration"
     >
-      <rect width="360" height="112" fill="#080d1f" />
-      <circle cx="32" cy="18" r="1.2" fill="#f5f7ff" opacity="0.7" />
-      <circle cx="98" cy="12" r="1.1" fill="#f5f7ff" opacity="0.6" />
-      <circle cx="234" cy="16" r="1.3" fill="#f5f7ff" opacity="0.7" />
-      <circle cx="318" cy="24" r="16" fill="#2357b8" opacity={success ? 0.9 : 0.65} />
-      <path d="M312 16 q8 3 4 9 q-6 3 -8 -3 z" fill="#35d2a0" opacity="0.8" />
+      <rect width="360" height="112" fill="#52497e" />
+      <circle cx="32" cy="18" r="1.2" fill="#fffefa" opacity="0.75" />
+      <circle cx="98" cy="12" r="1.1" fill="#fffefa" opacity="0.65" />
+      <circle cx="234" cy="16" r="1.3" fill="#fffefa" opacity="0.75" />
+      <circle cx="318" cy="24" r="16" fill="#2357b8" opacity={success ? 0.95 : 0.72} />
+      <path d="M312 16 q8 3 4 9 q-6 3 -8 -3 z" fill="#57d3a1" opacity="0.85" />
 
-      {/* Ground */}
-      <path d="M0 90 Q180 78 360 90 V112 H0 Z" fill="#1e2747" />
+      {/* Pastel Regolith Ground */}
+      <path d="M0 90 Q180 78 360 90 V112 H0 Z" fill="#cfc6e2" />
 
       {success ? (
         <g>
@@ -547,8 +547,8 @@ function ResourceTrajectoryChart({ snapshots, completedCycles }: { snapshots: Mi
           const y = yForVal(tick);
           return (
             <g key={tick}>
-              <line x1={padL} x2={width - padR} y1={y} y2={y} stroke="#abb8d5" strokeOpacity="0.14" strokeDasharray="3 3" />
-              <text x={padL - 6} y={y + 3} textAnchor="end" fill="#abb8d5" fontSize="9.5" fontFamily="JetBrains Mono">
+              <line x1={padL} x2={width - padR} y1={y} y2={y} stroke="#5b6b94" strokeOpacity="0.22" strokeDasharray="3 3" />
+              <text x={padL - 6} y={y + 3} textAnchor="end" fill="#5b6b94" fontSize="9.5" fontFamily="JetBrains Mono">
                 {tick}
               </text>
             </g>
@@ -560,12 +560,12 @@ function ResourceTrajectoryChart({ snapshots, completedCycles }: { snapshots: Mi
           const unreached = c > completedCycles;
           return (
             <g key={c}>
-              <line x1={x} x2={x} y1={padT} y2={padT + innerH} stroke="#abb8d5" strokeOpacity={unreached ? 0.06 : 0.14} />
+              <line x1={x} x2={x} y1={padT} y2={padT + innerH} stroke="#5b6b94" strokeOpacity={unreached ? 0.08 : 0.2} />
               <text
                 x={x}
                 y={height - 8}
                 textAnchor="middle"
-                fill={unreached ? '#6b7899' : '#abb8d5'}
+                fill={unreached ? '#9aa7c9' : '#344270'}
                 fontSize="10"
                 fontFamily="JetBrains Mono"
               >
@@ -583,7 +583,7 @@ function ResourceTrajectoryChart({ snapshots, completedCycles }: { snapshots: Mi
                 <polyline
                   fill="none"
                   stroke={s.color}
-                  strokeWidth="2.2"
+                  strokeWidth="2.4"
                   strokeDasharray={s.dash}
                   points={pts}
                 />
@@ -593,10 +593,10 @@ function ResourceTrajectoryChart({ snapshots, completedCycles }: { snapshots: Mi
                   key={`${s.key}-${row.cycle}`}
                   cx={xForCycle(row.cycle)}
                   cy={yForVal(row.resources[s.key])}
-                  r="3.2"
+                  r="3.4"
                   fill={s.color}
-                  stroke="#080d1f"
-                  strokeWidth="1"
+                  stroke="#fffefa"
+                  strokeWidth="1.2"
                 />
               ))}
             </g>

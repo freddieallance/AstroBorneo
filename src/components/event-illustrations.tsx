@@ -26,14 +26,14 @@ export function EventHeroIllustration({
   return (
     <svg
       viewBox="0 0 420 132"
-      className="h-24 w-full shrink-0 rounded-2xl border border-dim/20 bg-deep/90 sm:h-36"
+      className="h-24 w-full shrink-0 rounded-2xl border border-[#dfe5fa] bg-[#52497e] sm:h-36"
       aria-hidden
       data-testid={`illustration-event-c${cycle}`}
     >
       <defs>
         <linearGradient id="evSky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#070b1b" />
-          <stop offset="1" stopColor="#121d3b" />
+          <stop offset="0" stopColor="#52497e" />
+          <stop offset="1" stopColor="#72669f" />
         </linearGradient>
       </defs>
 
@@ -42,11 +42,11 @@ export function EventHeroIllustration({
       {[
         [28, 18], [92, 12], [164, 22], [238, 14], [312, 20], [382, 15],
       ].map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r={i % 2 === 0 ? 1.2 : 0.9} fill="#f5f7ff" opacity="0.65" />
+        <circle key={i} cx={x} cy={y} r={i % 2 === 0 ? 1.2 : 0.9} fill="#fffefa" opacity="0.7" />
       ))}
       {/* Lunar horizon */}
-      <path d="M0 104 Q110 92 210 102 T420 98 V132 H0 Z" fill="#222a47" />
-      <path d="M0 112 Q210 102 420 112 V132 H0 Z" fill="#2b365a" />
+      <path d="M0 104 Q110 92 210 102 T420 98 V132 H0 Z" fill="#a296be" />
+      <path d="M0 112 Q210 102 420 112 V132 H0 Z" fill="#cfc6e2" />
 
       {/* C1: BASE READY — Habitat, Greenhouse, Solar, Water Tanks gently pulsing */}
       {cycle === 1 && (
